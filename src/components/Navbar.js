@@ -19,9 +19,15 @@ function Navbar(props){
                 </Stack>
             </Center>
             <Center>
-                <Button colorScheme='teal' variant='ghost' onClick={() => props.onClickFunction(3) }>
-                        <Avatar size='sm' ></Avatar>
-                </Button>
+                {
+                    props.isConnected ? <Button colorScheme='teal' variant='ghost' onClick={() => props.onClickFunction(3) }>
+                    <Avatar size='sm' ></Avatar>
+            </Button>
+            : <Button colorScheme='teal' variant='ghost' onClick={() => props.connectWallet() }>
+                Connect a wallet
+            </Button>
+                }
+                
             </Center>
         </Flex>
     );
