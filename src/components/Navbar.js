@@ -23,9 +23,13 @@ function Navbar(props){
                     props.isConnected ? <Button colorScheme='teal' variant='ghost' onClick={() => props.onClickFunction(3) }>
                     <Avatar size='sm' ></Avatar>
             </Button>
-            : <Button colorScheme='teal' variant='ghost' onClick={() => props.connectWallet() }>
+            : <><Button colorScheme='teal' variant='ghost' onClick={() => props.connectWallet(0) }>
                 Connect a wallet
             </Button>
+            <Button colorScheme='teal' variant='ghost' onClick={() => props.connectWallet(1) }>
+            Connect to Coinbase wallet
+        </Button></>
+
                 }
                 
             </Center>
