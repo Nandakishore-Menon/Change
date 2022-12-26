@@ -9,6 +9,7 @@ import {CoinbaseWallet, Injected} from "./components/wallet/Connector"
 import { act } from "react-dom/test-utils";
 import { StateProvider } from "./StateProvider";
 import { abi } from "./contract/petition";
+import Homepage from "./components/Homepage";
 
 
 function App(props) {
@@ -54,68 +55,23 @@ function App(props) {
                 console.log(ex)
             }
         }
+    }
         
-        }
-        
-        async function disconnect() {
+    async function disconnect() {
         try {
             deactivate()
         } catch (ex) {
             console.log(ex)
         }
-        } 
-        console.log(process.env.REACT_APP_INFURA_KEY);
+    } 
+
+    console.log(process.env.REACT_APP_INFURA_KEY);
+    
     return (<>
         <StateProvider initialState = {initialState} reducer = {reducer}>
         <ChakraProvider>
             <Navbar onClickFunction={setDisplayCount} isConnected={active} connectWallet={connect} />
-            {/* <Center >
-                <Stack width='4xl'>
-                    <Petition/>
-                    <Divider></Divider>
-                    <Petition/>
-                </Stack>
-            </Center> */}
-            {/* <Center>
-                <PetitionForm/>
-            </Center> */}
-            {displayCount == 0 &&
-                (
-                    <Center >
-                        <Stack width='4xl'>
-                            <Petition/>
-                            <Divider></Divider>
-                            <Petition/>
-                        </Stack>
-                    </Center>
-                )                
-            }
-            {displayCount == 1 && 
-                (
-                    <Center>
-                        <PetitionForm onClickFunction={setDisplayCount}/>
-                    </Center>
-                )
-            }
-            {/* SIMILARLY DO FOR DISPLAYCOUNT = 2 AND DISPLAY COUNT = 3 */}
-            {displayCount ==2 && 
-                (
-                    <Center >
-                        <Stack width='4xl'>
-                            <Petition/>
-                            <Divider></Divider>
-                            <Petition/>
-                        </Stack>
-                    </Center>
-                )
-            }
-            {displayCount ==3 && 
-                (
-                    <Center>
-                        <h1>Profile Page</h1>
-                    </Center>
-                )
-            }
+            <Homepage setDisplayCount={setDisplayCount} displayCount={displayCount}></Homepage>
         </ChakraProvider>
         </StateProvider>
     </>);
