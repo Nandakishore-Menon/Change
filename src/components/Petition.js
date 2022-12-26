@@ -3,10 +3,13 @@ import { Button, Card, CardBody, CardFooter,Center,Divider,Flex,Heading, Image, 
     StatHelpText, } from "@chakra-ui/react";
 import { ChatIcon, ArrowUpIcon } from '@chakra-ui/icons'
 import { useState } from "react";
+import { useStateValue } from "../StateProvider";
+
 
 function Petition(props){
     // petition ID, ownerAddress, signed users count, data hash and comments.
     // data hash contains : title, content, time created and tags. 
+    const [state,dispatch] = useStateValue();
 
     const [votes,setVotes] = useState(["sdf","sdfa","ferg"]);
     const [title,setTitle] = useState("The Perfect Petition");

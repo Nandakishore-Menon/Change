@@ -1,8 +1,10 @@
 import { Button, Input, Stack,Textarea } from "@chakra-ui/react";
 import { useState } from "react";
-
+import { useStateValue } from "../StateProvider";
 
 function PetitionForm(props){
+    const [state,dispatch] = useStateValue();
+
     let [titleValue, setTitleValue] = useState('');
     let [imageLink, setImageLink] = useState('');
     let [content, setContent] = useState('');
