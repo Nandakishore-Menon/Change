@@ -9,6 +9,7 @@ import {CoinbaseWallet, Injected} from "./components/wallet/Connector"
 import { act } from "react-dom/test-utils";
 import { StateProvider } from "./StateProvider";
 import { abi } from "./contract/petition";
+import {setup} from "./util/ipfs";
 
 
 function App(props) {
@@ -40,6 +41,7 @@ function App(props) {
 
     async function connect(wallet_id) {
         // console.log("called")
+        await setup();
         if(wallet_id == 1) {
             try {
                 await activate(CoinbaseWallet)
