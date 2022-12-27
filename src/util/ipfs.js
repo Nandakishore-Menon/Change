@@ -1,43 +1,100 @@
-import Moralis from "moralis";
-import { EvmChain, uploadFolderOperation } from "@moralisweb3/common-evm-utils";
+import axios from 'axios';
 
-const setup = async () => {
-    console.log("moralis: "+ process.env.REACT_APP_MORALIS_API_KEY)
-    await Moralis.start({
-        apiKey: `${process.env.REACT_APP_MORALIS_API_KEY}`,
-        // ...and any other configuration
-      });
-}
+
+
+
+const base64 = async (file) => {
+  return new Promise(resolve => {
+    let fileInfo;
+    let baseURL = "";
+    // Make new FileReader
+    let reader = new FileReader();
+
+    // Convert the file to base64 text
+    reader.readAsDataURL(file);
+
+    // on reader load somthing...
+    reader.onload = () => {
+      // Make a fileInfo Object
+      console.log("Called", reader);
+      baseURL = reader.result;
+      console.log(baseURL);
+      resolve(baseURL);
+    };
+    // console.log(fileInfo);
+  });
+};
 
 const uploadImage = async (title, time, image) => {
-    const abi = [
-        {
-          path: `${title}${time}.png`,
-          content: btoa(JSON.stringify(image[0])),
-        },
-      ];
+  const options = {
+    method: 'POST',
+    url: 'https://deep-index.moralis.io/api/v2/ipfs/uploadFolder',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+      'X-API-Key': `${process.env.REACT_APP_MORALIS_API_KEY}`
+    },
+    data: [
+      {
+        path: `${title.replace(/ /g,'')}.png`,
+        content: image
+      }
+    ]
+  };
 
-    const response = await Moralis.EvmApi.ipfs.uploadFolder({ abi });
-    console.log("Image response: " + response);
-    return response
+  var image_response;
+  await axios
+  .request(options)
+  .then(async (response) => {
+    image_response =  response;
+    // console.log(response.data);
+  })
+  .catch(function (error) {
+    console.error(error);
+  });
+
+    return image_response
 }
 
 const uploadPetition = async (title, content, time, tags, image) => {
     const image_response = await uploadImage(title, time, image)
-    const abi = [
+    console.log(image_response.data[0].path)
+
+    const options = {
+      method: 'POST',
+      url: 'https://deep-index.moralis.io/api/v2/ipfs/uploadFolder',
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/json',
+        'X-API-Key': `${process.env.REACT_APP_MORALIS_API_KEY}`
+      },
+      data: [
         {
-          path: "petitions/${title}${time}.json",
+          path: `${title.replace(/ /g,'')}.json`,
           content: {
             title: title,
             content: content,
-            // image: image_response[0].path,
-            // time: time,
+            time: time,
+            image: image_response.data[0].path,
             tags: tags,
-          },
-        },
-      ];
-      const response = await Moralis.EvmApi.ipfs.uploadFolder({ "abi":abi[0] });
-      console.log("Final response: " + response);
+            
+          }
+        }
+      ]
+    };
+
+    var metadata_path;
+    await axios
+    .request(options)
+    .then(async (response) => {
+      metadata_path = await response.data;
+      // console.log(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+
+    return metadata_path
 }
 
-export {setup, uploadPetition};
+export {uploadPetition, base64};

@@ -2,7 +2,7 @@ import { Button, Input, Stack,Textarea} from "@chakra-ui/react";
 import { FileUploader, FileCard } from "evergreen-ui";
 import { useState } from "react";
 import { useStateValue } from "../StateProvider";
-import {uploadPetition} from "../util/ipfs";
+import {uploadPetition, base64} from "../util/ipfs";
 
 function PetitionForm(props){
     const [state,dispatch] = useStateValue();
@@ -15,44 +15,55 @@ function PetitionForm(props){
     let handleTitleChange = (e) => {
         let inputValue = e.target.value;
         setTitleValue(inputValue);
-        console.log("TITLE:\n",titleValue);
+        // console.log("TITLE:\n",titleValue);
     }
 
     let handleContentChange = (e) => {
         let inputValue = e.target.value;
         setContent(inputValue);
-        console.log("CONTENT:\n",content);
+        // console.log("CONTENT:\n",content);
     }
 
-    let handleImageChange = (e) => {
+    let handleImageChange = async (e) => {
         let inputValue = e;
         console.log(e);
         setImage(inputValue);
-        console.log("IMAGE:\n",image);
+        base64(inputValue[0]).then((base)=>{
+            console.log(base);
+        })
+        
     }
 
     let handleRemove = (e) => {
         setImage(undefined);
-        console.log("IMAGE:\n",image);
+        // console.log("IMAGE:\n",image);
     }
 
     let handleTagChange = (e) => {
         let inputValue = e.target.value;
         setTags(inputValue);
-        console.log("TAGS:\n",tags);
+        // console.log("TAGS:\n",tags);
     }
 
     let handleSubmit = async (e) => {
         let tempTags = tags.split(" ");
-        console.log("TITLE:\n",titleValue);
-        console.log("CONTENT:\n",content);
-        console.log("IMAGE:\n",image.toString("base64"));
-        console.log("TAGS:\n",tempTags);
-        console.log("submitted");
+        let img_base64;
+        await base64(image[0]).then((base)=>{
+            // console.log(base);
+            img_base64 = base;
+        })
+        // console.log("TITLE:\n",titleValue);
+        // console.log("CONTENT:\n",content);
+        // console.log("IMAGE:\n",img_base64);
+        // console.log("TAGS:\n",tempTags);
+        // console.log("submitted");
         let time = new Date().toLocaleString();
-        await uploadPetition(titleValue, content, time, tags, image);
+        
+        const metadata = await uploadPetition(titleValue, content, time, tags, img_base64);
+        console.log("metadata")
+        console.log(metadata)
         setContent("");
-        setImage("");
+        setImage(undefined);
         setTags("");
         setTitleValue("");
         // props.onClickFunction(0);

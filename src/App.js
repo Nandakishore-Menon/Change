@@ -40,7 +40,6 @@ function App(props) {
 
 
     async function connect(wallet_id) {
-
         if(wallet_id == 1) {
             try {
                 await activate(CoinbaseWallet)
