@@ -117,7 +117,6 @@ function PetitionForm(props){
         values={image}
       />
             <Button colorScheme='blue' onClick={handleSubmit}>SUBMIT</Button>
-            {/* <Button></Button> */}
         </Stack>
     </>);
 }

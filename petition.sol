@@ -43,17 +43,29 @@ contract PetitionContract {
         return returnArray;
     }
 
+    // get all users for testing
+    function getAllUsers() public view returns(User[] memory) {
+        User[] memory returnArray = new User[](users.length);
+        for(uint _i=0; _i<users.length; ++_i){
+            User storage u = users[_i];
+            returnArray[_i] = u;
+        }
+        return returnArray;
+    }
+
+    // get all 
+
     // get number of petitions 
     function getNumberOfPetitions() public view returns(uint){
         return petitions.length;
     }
 
     // get petitions by an user 
-    function getPetitionByUser(User memory _u) public view returns(Petition[] memory){
-        Petition[] memory returnArray = new Petition[](petitionsPerUser[_u.addr]);
+    function getPetitionByUser(address _userAddress) public view returns(Petition[] memory){
+        Petition[] memory returnArray = new Petition[](petitionsPerUser[_userAddress]);
         uint _j = 0;
         for(uint _i=0; _i<petitions.length; ++_i){
-            if(petitions[_i].owner == _u.addr){
+            if(petitions[_i].owner == _userAddress){
                 Petition storage p = petitions[_i];
                 returnArray[_j] = p;
                 _j++;
@@ -62,6 +74,7 @@ contract PetitionContract {
         return returnArray;
     }
 
+    // ADD A NEW USER
     function addUser(address _userAddr, string memory _userHash) public {
         if(userExists[_userAddr]==false){
             User memory _u = User(_userAddr,_userHash);

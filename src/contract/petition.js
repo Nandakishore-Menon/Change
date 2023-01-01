@@ -1,4 +1,5 @@
-export const abi = [
+export const abi = 
+[
 	{
 		"inputs": [
 			{
@@ -108,6 +109,31 @@ export const abi = [
 	},
 	{
 		"inputs": [],
+		"name": "getAllUsers",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "addr",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "userHash",
+						"type": "string"
+					}
+				],
+				"internalType": "struct PetitionContract.User[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "getNumberOfPetitions",
 		"outputs": [
 			{
@@ -122,21 +148,9 @@ export const abi = [
 	{
 		"inputs": [
 			{
-				"components": [
-					{
-						"internalType": "address",
-						"name": "addr",
-						"type": "address"
-					},
-					{
-						"internalType": "string",
-						"name": "userHash",
-						"type": "string"
-					}
-				],
-				"internalType": "struct PetitionContract.User",
-				"name": "_u",
-				"type": "tuple"
+				"internalType": "address",
+				"name": "_userAddress",
+				"type": "address"
 			}
 		],
 		"name": "getPetitionByUser",

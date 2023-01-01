@@ -6,17 +6,12 @@ import { useState } from "react";
 import { useStateValue } from "../StateProvider";
 
 
-function Petition(props){
-    // petition ID, ownerAddress, signed users count, data hash and comments.
-    // data hash contains : title, content, time created and tags. 
-    const [state,dispatch] = useStateValue();
+function PetitionFromProps(props){
 
-    const [votes,setVotes] = useState(["sdf","sdfa","ferg"]);
-    const [title,setTitle] = useState("The Perfect Petition");
-    const [imagelink,setImageLink] = useState('https://cdn.nba.com/teams/legacy/www.nba.com/warriors/sites/warriors/files/20201202-curry-1280.jpg');
-    const [content,setContent] = useState("No Homo,\"No homo\" is a slang phrase used at the end of a sentence to assert the statement spoken by the speaker had no intentional homosexual implications. The phrase is also \"added to a statement in order to rid [oneself] of a possible homosexual double-entendre\". As with many attributes of hip hop culture, the use of \"no homo\" has become integrated into the mainstream North American vernacular. One reason for this as proposed by Brown is that the integration and reception of the specific phrase no homo into the conversational dialect of North American English was simple and due in part to its phonetic resonance");
-    const [tags,setTags] = useState(["Basketball","GOAT","No Homo"]);
-
+    // props will have Petition id int, owner address ,signed user addresses array, petition hash string, comments id array
+    const imagelink ='https://cdn.nba.com/teams/legacy/www.nba.com/warriors/sites/warriors/files/20201202-curry-1280.jpg';
+    // have to set title content, image, tags by using IPFS URI returned in the "petitionHash"--> string.
+    
     return (
         <>
            <Card
@@ -36,7 +31,7 @@ function Petition(props){
                 <Stack>
                     <Flex flexDirection='column'>
                     <CardBody flex='1'>
-                    <Heading size='xl' style={{padding:"0px 10px 0px 0px"}}>{title}</Heading>
+                    <Heading size='xl' style={{padding:"0px 10px 0px 0px"}}>{}</Heading>
 
                     {/* Insert tags from list of tags from ipfs */}
                     <div className="tags-input-container">
@@ -84,4 +79,4 @@ function Petition(props){
     );
 }
 
-export default Petition;
+export default PetitionFromProps;
