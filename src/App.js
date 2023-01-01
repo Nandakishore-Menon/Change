@@ -31,11 +31,8 @@ function App(props) {
     }
 
     const reducer = (state, action) => {
-        console.log("state:",state);
-        console.log("Action :",action);
         switch (action.type) {
             case "setContract":
-                // console.log(action.contract);
                 return {
                 ...state,
                 contract: action.payload.contract,

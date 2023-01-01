@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useStateValue } from "../StateProvider";
 
 
-function PetitionFromProps(props){
+function PetitionNew(props){
 
     // props will have Petition id int, owner address ,signed user addresses array, petition hash string, comments id array
     const imagelink ='https://cdn.nba.com/teams/legacy/www.nba.com/warriors/sites/warriors/files/20201202-curry-1280.jpg';
@@ -79,4 +79,4 @@ function PetitionFromProps(props){
     );
 }
 
-export default PetitionFromProps;
+export default PetitionNew;

@@ -2,6 +2,7 @@ import { Center, Divider, Portal, Stack } from "@chakra-ui/react";
 import AllPetitions from "./AllPetitions";
 import Petition from "./Petition";
 import PetitionForm from "./PetitionForm";
+import { useStateValue } from "../StateProvider";
 
 // import Web3 from "web3";
 function Homepage(props){// send props displaycount
@@ -9,6 +10,8 @@ function Homepage(props){// send props displaycount
     // const web3 = props.initialState.web3;
     // const tw3 = new Web3(provider);
     // tw3.
+    const [state, dispatch] = useStateValue();
+    console.log("logging props in home page :", props);
     // console.log(web3.);
     // console.log("calling all petitions ", props.initialState.contract.methods.getAllPetitions().call({from:'0xcf09305128cf1CF5fe1c53CA400F9b219e3FC6Bb'}));
     return (
@@ -16,14 +19,14 @@ function Homepage(props){// send props displaycount
         { props.displayCount == 0 &&
             (
                 <>
-                    {props.initialState.account ? <AllPetitions state={props.initialState}></AllPetitions>:<></>}
-                    <Center >
+                    <AllPetitions></AllPetitions>
+                    {/* <Center >
                         <Stack width='4xl'>
                             <Petition/>
                             <Divider></Divider>
                             <Petition/>
                         </Stack>
-                    </Center>
+                    </Center> */}
                 </>
 
             )                

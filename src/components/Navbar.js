@@ -1,5 +1,5 @@
 // 0 for home, 1 form to start petition, 2 view petitions by user, 3 profile info
-import {React, Image} from 'react';
+import {React} from 'react';
 import { Avatar, Button, Center, Flex, Stack, useDisclosure, Box } from '@chakra-ui/react'
 import {
     Modal,
@@ -10,7 +10,6 @@ import {
     ModalBody,
     ModalCloseButton,
   } from '@chakra-ui/react'
-import MetamaskIcon from './WalletButtons';
 import metamask from "../assets/metamask.svg"
 import coinbase from "../assets/coinbase.svg"
 import WalletButtons from './WalletButtons';
@@ -30,13 +29,29 @@ function Navbar(props){
 
         if(wallet_id == 1) {
             try {
-                console.log('CALLING ACTIVATE FOR COINBASE');
-                await activate(CoinbaseWallet)
-                console.log(await CoinbaseWallet.getAccount())
-                const temp_web3 = new Web3(CoinbaseWallet);
+                // console.log('CALLING ACTIVATE FOR COINBASE');
+                // await activate(CoinbaseWallet)
+                await activate(CoinbaseWallet);
+                console.log("coinbase wallet",CoinbaseWallet.provider);
+                // const temp_web3 = new Web3((await Injected.getProvider()).providerMap.get("CoinbaseWallet"));
+                const temp_web3 = new Web3( CoinbaseWallet.provider);
+                console.log("TempWEB3",temp_web3)
+                // const account = await Injected.getAccount();
+                const account = await CoinbaseWallet.getAccount();
                 const cntrct = new temp_web3.eth.Contract(abi, process.env.REACT_APP_CONTRACT_ADDRESS);
-                console.log("contract in coinbase:",cntrct);
-                console.log("web3 in coinbase ", temp_web3);
+                console.log("CONTRACT",cntrct);
+                console.log("library:",library);
+                // try {
+                //     await library.provider.request({
+                //       method: "wallet_switchEthereumChain",
+                //       params: [{ chainId: "5" }],
+                //     });
+                // } catch (switchError) {
+                //     console.log("Switch Error",switchError);
+                // }
+
+
+                // console.log("ADDRESS: ",await CoinbaseWallet.getAccount());
                 await dispatch({
                     type: "setContract",
                     payload: {
@@ -53,7 +68,7 @@ function Navbar(props){
                   await dispatch({
                     type: "setAccount",
                     payload: {
-                      account: await CoinbaseWallet.getAccount(),
+                      account:account,
                     },
                   });
                 
@@ -63,14 +78,10 @@ function Navbar(props){
         }
         else {
             try {
-                console.log('CALLING ACTIVATE FOR INJECTED WALLET');
+                // console.log('CALLING ACTIVATE FOR INJECTED WALLET');
                 await activate(Injected);
-                const tw3 = new Web3(Injected);
+                const tw3 = new Web3( (await Injected.getProvider()).providerMap.get("MetaMask"));
                 const cntrct = new tw3.eth.Contract(abi, process.env.REACT_APP_CONTRACT_ADDRESS);
-                console.log(await Injected.getAccount())
-                console.log(cntrct)
-                console.log(tw3)
-                // call dispatch here
                 await dispatch({
                     type: "setWeb3",
                     payload: {
@@ -96,9 +107,6 @@ function Navbar(props){
             }
         }
 
-        // var doesExist = await contract.methods.userExists(account).call({from: account});
-        // console.log("Exists:" + doesExist);
-        // console.log("SEND in Activate ",web3.currentProvider.send);
     }
         
     async function disconnect() {

@@ -66,6 +66,9 @@ function PetitionForm(props){
         setImage(undefined);
         setTags("");
         setTitleValue("");
+
+        const response = await state.contract.methods.addPetition(metadata[0].path).call({from:state.account});
+        console.log(response);
         // props.onClickFunction(0);
     }
 

@@ -4,7 +4,7 @@ const LandingPage = props => {
     return (
         <>
             {/* <Navbar onClickFunction={setDisplayCount} isConnected={active} connectWallet={connect} initialState={initialState} /> */}
-            Land here
+            <h1>Landing Page rendered</h1>
         </>
     )
 }
