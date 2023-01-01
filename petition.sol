@@ -53,7 +53,18 @@ contract PetitionContract {
         return returnArray;
     }
 
-    // get all 
+    // get user from address
+    function getUser(address _addr) public view returns(User memory){
+        User memory retU=User(msg.sender,"nonexistent");
+        for(uint _i=0; _i<users.length; ++_i){
+            User storage u = users[_i];
+            if(u.addr==_addr){
+                retU = u;
+                break;
+            }
+        }
+        return retU;
+    }
 
     // get number of petitions 
     function getNumberOfPetitions() public view returns(uint){

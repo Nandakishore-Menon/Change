@@ -3,6 +3,8 @@ import AllPetitions from "./AllPetitions";
 import Petition from "./Petition";
 import PetitionForm from "./PetitionForm";
 import { useStateValue } from "../StateProvider";
+import MyPetitions from "./MyPetitions";
+import Profile from "./Profile";
 
 // import Web3 from "web3";
 function Homepage(props){// send props displaycount
@@ -40,21 +42,19 @@ function Homepage(props){// send props displaycount
         }
         {/* SIMILARLY DO FOR DISPLAYCOUNT = 2 AND DISPLAY COUNT = 3 */}
         {props.displayCount ==2 && 
-            (
-                <Center >
-                    <Stack width='4xl'>
-                        <Petition/>
-                        <Divider></Divider>
-                        <Petition/>
-                    </Stack>
-                </Center>
+            ( <MyPetitions />
+                // <Center >
+                //     <Stack width='4xl'>
+                //         <Petition/>
+                //         <Divider></Divider>
+                //         <Petition/>
+                //     </Stack>
+                // </Center>
             )
         }
         {props.displayCount ==3 && 
             (
-                <Center>
-                    <h1>Profile Page</h1>
-                </Center>
+                <Profile />
             )
         }
         </>

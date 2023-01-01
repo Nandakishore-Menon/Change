@@ -5,12 +5,12 @@ import { chakra } from "@chakra-ui/react";
 import {useStateValue} from '../StateProvider';
 import { abi } from "../contract/petition";
 
-function AllPetitions(props){
+function MyPetitions(props){
     const [state, dispatch] = useStateValue();
     const [petitions,setPetitions] = useState([]);
     useEffect(()=>{
         const get_pet = async () => {
-            const petition_list = await state.contract.methods.getAllPetitions().call({from : state.account});
+            const petition_list = await state.contract.methods.getPetitionByUser(state.account).call({from : state.account});
             setPetitions(petition_list);
         }
 
@@ -42,4 +42,4 @@ function AllPetitions(props){
     </>);
 }
 
-export default AllPetitions;
+export default MyPetitions;

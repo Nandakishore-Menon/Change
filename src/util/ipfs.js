@@ -97,4 +97,41 @@ const uploadPetition = async (title, content, time, tags, image) => {
     return metadata_path
 }
 
-export {uploadPetition, base64};
+const uploadUserData = async (account, profileInfo,bio) => {
+  // const image_response = await uploadImage(title, time, image)
+  // console.log(image_response.data[0].path)
+
+  const options = {
+    method: 'POST',
+    url: 'https://deep-index.moralis.io/api/v2/ipfs/uploadFolder',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+      'X-API-Key': `${process.env.REACT_APP_MORALIS_API_KEY}`
+    },
+    data: [
+      {
+        path: `${account}.json`,
+        content: {
+          profile: profileInfo,
+          bio: bio,
+        }
+      }
+    ]
+  };
+  var metadata_path;
+  await axios
+  .request(options)
+  .then(async (response) => {
+    metadata_path = await response.data;
+    // console.log(response.data);
+  })
+  .catch(function (error) {
+    console.error(error);
+  });
+
+  return metadata_path[0].path
+}
+
+
+export {uploadPetition, base64, uploadUserData};

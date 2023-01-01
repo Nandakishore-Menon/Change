@@ -11,14 +11,14 @@ const MainPage = (props) => {
     console.log("state in main page Component",state);
     return (
         <>
+        <Navbar onClickFunction={setDisplayCount}  />
         { ((state!= null || state!=undefined) && state.account)?
                 <>
-                <Navbar onClickFunction={setDisplayCount}  />
+                
                 <Homepage setDisplayCount={setDisplayCount} displayCount={displayCount}></Homepage>
                 </>
                 :
                 <>
-                <Navbar onClickFunction={setDisplayCount} />
                 {/* <Login></Login> */}
                 <LandingPage></LandingPage>
 

@@ -27,7 +27,8 @@ function App(props) {
     var initialState = {
         web3: null,
         contract: null,
-        account: null
+        account: null,
+        userExists:-1
     }
 
     const reducer = (state, action) => {
@@ -47,6 +48,11 @@ function App(props) {
                     ...state,
                     account: action.payload.account
                 };
+            case "setUserExists":
+                return {
+                    ...state,
+                    userExists: action.payload.userExists
+                }
           default:
             return state;
         }
