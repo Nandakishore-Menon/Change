@@ -55,8 +55,10 @@ function Homepage(props){// send props displaycount
             )
         }
         {/* SIMILARLY DO FOR DISPLAYCOUNT = 2 AND DISPLAY COUNT = 3 */}
+        
         {props.displayCount ==2 && 
-            ( <MyPetitions />
+
+            ( <MyPetitions/>          
                 // <Center >
                 //     <Stack width='4xl'>
                 //         <Petition/>

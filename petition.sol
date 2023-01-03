@@ -88,13 +88,9 @@ contract PetitionContract {
 
     // get petitions by petitionID 
     function getPetitionByPid(uint _pid) public view returns(Petition memory){
-
-        for(uint _i=0; _i<petitions.length; ++_i){
-            if(petitions[_i].petitionID == _pid){
-                Petition memory p = petitions[_i];
-                return p;
-            }
-        }
+        require(_pid < petitions.length);
+        Petition memory p = petitions[_pid];
+        return p;
     }
 
     // ADD A NEW USER

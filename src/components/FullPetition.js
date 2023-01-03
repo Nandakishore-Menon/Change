@@ -3,7 +3,8 @@ import { useParams } from 'react-router-dom'
 import { useStateValue } from '../StateProvider';
 import { Button, Card, CardBody, CardFooter,Center,Divider,Flex,Heading, Image, Stack, Stat, Tag, TagLabel, Text,StatLabel,
     StatNumber,
-    StatHelpText, } from "@chakra-ui/react";
+    StatHelpText,
+    Textarea, } from "@chakra-ui/react";
 import { ChatIcon, ArrowUpIcon } from '@chakra-ui/icons'
 import axios from "axios";
 const FullPetition = props => {
@@ -13,13 +14,14 @@ const FullPetition = props => {
     const [metadata, setMetadata] = useState();
     const [update, setUpdate] = useState(false);
     const [votes,setVotes] = useState(0);
+    const [comment, setComment] = useState("");
 
     useEffect(()=>{
         const getPid = async() => {
             if(petition == null || petition == undefined) {
-                const petition = await state.contract.methods.getPetitionByPid(pid).call({from:state.account});
-                setPetition(petition);
-                axios(props.url)
+                const pet= await state.contract.methods.getPetitionByPid(pid).call({from:state.account});
+                setPetition(pet);
+                axios(pet.petitionHash)
                 .then((response)=>{
                     setMetadata(response.data);
                 });
@@ -31,8 +33,8 @@ const FullPetition = props => {
                 //     .then(function (response) {
                 //       response.data.pipe(fs.createWriteStream('ada_lovelace.jpg'))
                 //     });
-                console.log("pet", petition)
-                setVotes(petition.signedUsersAddress.length);
+                console.log("pet", pet);
+                setVotes(pet.signedUsersAddress.length);
             }
             else {
                 const petition_count = await state.contract.methods.getVotes(pid).call({from: state.account});
@@ -44,7 +46,7 @@ const FullPetition = props => {
     }, [update])
 
     const upVote = async () => {
-        const response = await state.contract.methods.signPetition(props.pid).send({from:state.account});
+        const response = await state.contract.methods.signPetition(pid).send({from:state.account});
         setUpdate(true);
     }
 
@@ -52,7 +54,7 @@ const FullPetition = props => {
         <>
 
             {
-                (metadata)?
+                (petition && metadata)?
            <Card
             overflow='hidden'
             variant='outline'
@@ -100,15 +102,22 @@ const FullPetition = props => {
                         <Button flex='1' variant='ghost' leftIcon={<ArrowUpIcon></ArrowUpIcon>} onClick={upVote}>
                             Vote
                         </Button>
-                        <Button flex='1' variant='ghost' leftIcon={<ChatIcon></ChatIcon>}>
+                        {/* <Button flex='1' variant='ghost' leftIcon={<ChatIcon></ChatIcon>}>
                             Comment
-                        </Button>
+                        </Button> */}
                         <Center >
                             <Stat >
                                 <StatLabel>Votes</StatLabel>
                                 <StatNumber>{votes}</StatNumber>
                             </Stat>
                         </Center>
+                        <Divider />
+                        <Stack direction={"horizontal"}>
+                            <Textarea resize={"none"} placeholder={"Comment here..."} value={comment} onChange={(e)=>{setComment(e.target.value)}}></Textarea>
+                            <Button flex='1' variant='ghost' leftIcon={<ArrowUpIcon></ArrowUpIcon>} onClick={()=>{console.log("contract func to set comments")}}>
+                        </Button>
+                        </Stack>
+                        
                     </CardFooter>
                     </Flex>
                 </Stack>

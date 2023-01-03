@@ -35,8 +35,10 @@ function AllPetitions(props){
         {/* {petitions} */}
         <Button colorScheme='blue' onClick={refresh}>REFRESH</Button>
         {
-                    petitions.map((petition)=>{ return (
-                        <Petition key={petition.petitionID} url={petition.petitionHash} votes={petition.signedUsersAddress} pid={petition.petitionID}/>
+                    petitions.map((petition)=>{ 
+                        
+                        return (
+                        <Petition key={petition.petitionID} url={petition.petitionHash} votes={petition.signedUsersAddress.length} pid={petition.petitionID}/>
                     )})
                 }
     </>);

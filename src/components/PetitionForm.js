@@ -3,14 +3,17 @@ import { FileUploader, FileCard } from "evergreen-ui";
 import { useState } from "react";
 import { useStateValue } from "../StateProvider";
 import {uploadPetition, base64} from "../util/ipfs";
+import { useNavigate } from "react-router-dom";
 
 function PetitionForm(props){
     const [state,dispatch] = useStateValue();
+    const navigate = useNavigate();
 
     let [titleValue, setTitleValue] = useState('');
     let [image, setImage] = useState();
     let [content, setContent] = useState('');
     let [tags,setTags] = useState('');
+    
 
     let handleTitleChange = (e) => {
         let inputValue = e.target.value;
@@ -69,7 +72,7 @@ function PetitionForm(props){
         console.log("metadata:", metadata[0].path)
         const response = await state.contract.methods.addPetition(metadata[0].path).send({from:state.account});
         console.log("response",response);
-        props.onClickFunction(0);
+        navigate("/");
     }
 
     return (<>

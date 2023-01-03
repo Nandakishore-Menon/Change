@@ -1,8 +1,14 @@
 import {React, useState} from 'react'
 import Homepage from './Homepage';
-import Navbar from './Navbar';
+import MyNavbar from './MyNavbar';
 import LandingPage from './LandingPage';
 import { useStateValue } from '../StateProvider';
+import {Router, Routes, Route} from 'react-router-dom';
+import AllPetitions from './AllPetitions';
+import PetitionForm from './PetitionForm';
+import MyPetitions from './MyPetitions';
+import Profile from './Profile';
+// import Navbar from './Navbar';
 
 const MainPage = (props) => {
     const [state, dispatch] = useStateValue();
@@ -11,20 +17,31 @@ const MainPage = (props) => {
     console.log("state in main page Component",state);
     return (
         <>
-        <Navbar onClickFunction={setDisplayCount}  />
         
-        { ((state!= null || state!=undefined) && state.account)?
+        {/* { ((state!= null || state!=undefined) && state.account)? */}
                 <>
-                
-                <Homepage setDisplayCount={setDisplayCount} displayCount={displayCount}></Homepage>
+                <Router>
+                    <Routes>
+                        <Route path={`/`} element={<><MyNavbar/><AllPetitions/></>} />
+                        <Route path={`/start`} element={<><MyNavbar/><PetitionForm/></>}/>
+                        <Route path ={`/mypetitions`} element={<><MyNavbar /><MyPetitions/></>} />
+                        <Route path={`/:name`} element={<><MyNavbar/><Profile/></>} />
+                        <Route path="/" element={<><h1>test</h1></>} />
+                        {/* <Route path="/petition" element={<>Test</>}/> */}
+                        {/* <Route path ="/mypetitions" element={<>Test</>} /> */}
+                        {/* <Route path="/:name" element={<>Test</>} /> */}
+                    </Routes>
+                </Router>
+                {/* <Homepage></Homepage> */}
+{/* <></> */}
                 </>
-                :
-                <>
+                {/* : */}
+                {/* <> */}
                 {/* <Login></Login> */}
-                <LandingPage></LandingPage>
+                {/* <LandingPage></LandingPage> */}
 
-                </>
-            }
+                {/* </> */}
+            {/* } */}
         </>
     );
 }

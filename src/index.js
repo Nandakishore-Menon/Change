@@ -6,15 +6,28 @@ import reportWebVitals from './reportWebVitals';
 import { InjectedConnector } from '@web3-react/injected-connector'
 import Web3 from 'web3';
 import { Web3ReactProvider } from '@web3-react/core'
+import { BrowserRouter } from 'react-router-dom';
 
 function getLibrary(provider) {
   return new Web3(provider)
   }
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+  
+
   <React.StrictMode>
       <Web3ReactProvider getLibrary={getLibrary}>
-        <App />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+        
+        {/* <Router>
+          <Route path={`/`} element={<><h2>Home</h2></>} />
+          <Route path={`/start`} element={<><MyNavbar/><PetitionForm/></>}/>
+          <Route path ={`/mypetitions`} element={<><MyNavbar /><MyPetitions/></>} />
+          <Route path={`/:name`} element={<><MyNavbar/><Profile/></>} />
+        </Router> */}
+
       </Web3ReactProvider>
 
   </React.StrictMode>

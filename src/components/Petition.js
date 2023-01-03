@@ -6,13 +6,16 @@ import { useEffect, useState } from "react";
 import { useStateValue } from "../StateProvider";
 import axios from "axios";
 import {Link} from 'react-router-dom'
-
+import { useNavigate } from "react-router-dom";
 
 function Petition(props){
     // petition ID, ownerAddress, signed users count, data hash and comments.
     // data hash contains : title, content, time created and tags.
     const [metadata, setMetadata] = useState();
     const [update, setUpdate] = useState(false);
+    const [state,dispatch] = useStateValue();
+    const [votes,setVotes] = useState(props.votes);
+    const navigate = useNavigate();
     useEffect(()=>{
         axios(props.url)
         .then((response)=>{
@@ -26,20 +29,18 @@ function Petition(props){
         //     .then(function (response) {
         //       response.data.pipe(fs.createWriteStream('ada_lovelace.jpg'))
         //     });
-        setVotes(props.votes.length);
+        setVotes(props.votes);
     }, []);
 
     useEffect(()=>{
         const updateVote = async () => {
+            console.log(props);
             const petition_count = await state.contract.methods.getVotes(props.pid).call({from: state.account});
+            console.log("Petition Count :",petition_count);
             setVotes(petition_count);
         }
         updateVote();
     }, [update]);
-
-    const [state,dispatch] = useStateValue();
-
-    const [votes,setVotes] = useState(0);
     // const [title,setTitle] = useState("The Perfect Petition");
     // const [imagelink,setImageLink] = useState('https://cdn.nba.com/teams/legacy/www.nba.com/warriors/sites/warriors/files/20201202-curry-1280.jpg');
     // const [content,setContent] = useState("No Homo,\"No homo\" is a slang phrase used at the end of a sentence to assert the statement spoken by the speaker had no intentional homosexual implications. The phrase is also \"added to a statement in order to rid [oneself] of a possible homosexual double-entendre\". As with many attributes of hip hop culture, the use of \"no homo\" has become integrated into the mainstream North American vernacular. One reason for this as proposed by Brown is that the integration and reception of the specific phrase no homo into the conversational dialect of North American English was simple and due in part to its phonetic resonance");
@@ -106,7 +107,7 @@ function Petition(props){
                         <Button flex='1' variant='ghost' leftIcon={<ArrowUpIcon></ArrowUpIcon>} onClick={upVote}>
                             Vote
                         </Button>
-                        <Button flex='1' variant='ghost' leftIcon={<ChatIcon></ChatIcon>}>
+                        <Button flex='1' variant='ghost' leftIcon={<ChatIcon></ChatIcon>} onClick={()=>{navigate(`/petitions/${props.pid}`)}}>
                             Comment
                         </Button>
                         <Center >
