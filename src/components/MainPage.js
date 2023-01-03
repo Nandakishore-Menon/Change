@@ -12,6 +12,7 @@ const MainPage = (props) => {
     return (
         <>
         <Navbar onClickFunction={setDisplayCount}  />
+        
         { ((state!= null || state!=undefined) && state.account)?
                 <>
                 

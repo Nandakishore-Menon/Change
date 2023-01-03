@@ -72,8 +72,9 @@ function Navbar(props){
     const callDispatch = async () => {
         // call uploadUserData
         if(state.userExists == 0){
-            const userInfoURL = await uploadUserData(account,profileInfo,bioInfo);
-            await contract.methods.addUser(account,userInfoURL).send({from:acc});
+            const userInfoURL = await uploadUserData(acc,profileInfo,bioInfo);
+            console.log(acc);
+            await contract.methods.addUser(acc,userInfoURL).send({from:acc});
         }
         try{
             await dispatch({

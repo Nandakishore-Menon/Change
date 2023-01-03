@@ -36,7 +36,7 @@ function MyPetitions(props){
         <Button colorScheme='blue' onClick={refresh}>REFRESH</Button>
         {
                     petitions.map((petition)=>{ return (
-                        <Petition key={petition.petitionID} url={petition.petitionHash} />
+                        <Petition key={petition.petitionID} url={petition.petitionHash} votes={petition.signedUsersAddress}/>
                     )})
                 }
     </>);

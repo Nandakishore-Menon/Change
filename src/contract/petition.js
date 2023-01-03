@@ -148,6 +148,52 @@ export const abi =
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "_pid",
+				"type": "uint256"
+			}
+		],
+		"name": "getPetitionByPid",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "petitionID",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "address[]",
+						"name": "signedUsersAddress",
+						"type": "address[]"
+					},
+					{
+						"internalType": "string",
+						"name": "petitionHash",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "commentsID",
+						"type": "uint256[]"
+					}
+				],
+				"internalType": "struct PetitionContract.Petition",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "address",
 				"name": "_userAddress",
 				"type": "address"
@@ -217,6 +263,25 @@ export const abi =
 				"internalType": "struct PetitionContract.User",
 				"name": "",
 				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_pid",
+				"type": "uint256"
+			}
+		],
+		"name": "getVotes",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",

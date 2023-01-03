@@ -1,49 +1,47 @@
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { useStateValue } from '../StateProvider';
 import { Button, Card, CardBody, CardFooter,Center,Divider,Flex,Heading, Image, Stack, Stat, Tag, TagLabel, Text,StatLabel,
     StatNumber,
     StatHelpText, } from "@chakra-ui/react";
 import { ChatIcon, ArrowUpIcon } from '@chakra-ui/icons'
-import { useEffect, useState } from "react";
-import { useStateValue } from "../StateProvider";
 import axios from "axios";
-import {Link} from 'react-router-dom'
-
-
-function Petition(props){
-    // petition ID, ownerAddress, signed users count, data hash and comments.
-    // data hash contains : title, content, time created and tags.
+const FullPetition = props => {
+    const {pid} = useParams();
+    const [state, dispatch] = useStateValue();
+    const [petition, setPetition] = useState();
     const [metadata, setMetadata] = useState();
     const [update, setUpdate] = useState(false);
-    useEffect(()=>{
-        axios(props.url)
-        .then((response)=>{
-            setMetadata(response.data);
-        });
-        // axios({
-        //     method: 'get',
-        //     url: props.url,
-        //     responseType: 'stream'
-        //   })
-        //     .then(function (response) {
-        //       response.data.pipe(fs.createWriteStream('ada_lovelace.jpg'))
-        //     });
-        setVotes(props.votes.length);
-    }, []);
-
-    useEffect(()=>{
-        const updateVote = async () => {
-            const petition_count = await state.contract.methods.getVotes(props.pid).call({from: state.account});
-            setVotes(petition_count);
-        }
-        updateVote();
-    }, [update]);
-
-    const [state,dispatch] = useStateValue();
-
     const [votes,setVotes] = useState(0);
-    // const [title,setTitle] = useState("The Perfect Petition");
-    // const [imagelink,setImageLink] = useState('https://cdn.nba.com/teams/legacy/www.nba.com/warriors/sites/warriors/files/20201202-curry-1280.jpg');
-    // const [content,setContent] = useState("No Homo,\"No homo\" is a slang phrase used at the end of a sentence to assert the statement spoken by the speaker had no intentional homosexual implications. The phrase is also \"added to a statement in order to rid [oneself] of a possible homosexual double-entendre\". As with many attributes of hip hop culture, the use of \"no homo\" has become integrated into the mainstream North American vernacular. One reason for this as proposed by Brown is that the integration and reception of the specific phrase no homo into the conversational dialect of North American English was simple and due in part to its phonetic resonance");
-    // const [tags,setTags] = useState(["Basketball","GOAT","No Homo"]);
+
+    useEffect(()=>{
+        const getPid = async() => {
+            if(petition == null || petition == undefined) {
+                const petition = await state.contract.methods.getPetitionByPid(pid).call({from:state.account});
+                setPetition(petition);
+                axios(props.url)
+                .then((response)=>{
+                    setMetadata(response.data);
+                });
+                // axios({
+                //     method: 'get',
+                //     url: props.url,
+                //     responseType: 'stream'
+                //   })
+                //     .then(function (response) {
+                //       response.data.pipe(fs.createWriteStream('ada_lovelace.jpg'))
+                //     });
+                console.log("pet", petition)
+                setVotes(petition.signedUsersAddress.length);
+            }
+            else {
+                const petition_count = await state.contract.methods.getVotes(pid).call({from: state.account});
+                setVotes(petition_count);
+            }
+            
+        }
+        getPid();
+    }, [update])
 
     const upVote = async () => {
         const response = await state.contract.methods.signPetition(props.pid).send({from:state.account});
@@ -59,7 +57,6 @@ function Petition(props){
             overflow='hidden'
             variant='outline'
             >
-                <Link to = {`/petitions/${props.pid}`}>
                 <Center style={{width:'100%',height:'300px'}}>
                     <Image
                         padding='20px 0px 0px 0px'
@@ -69,13 +66,11 @@ function Petition(props){
                         alt='Caffe Latte'
                     />
                 </Center>
-                </Link>
                 <Stack>
                     
                     <Flex flexDirection='column'>
-                    <Link to = {`/petition/${props.pid}`}>
                     <CardBody flex='1'>
-                    <Heading size='xl' style={{padding:"0px 10px 0px 0px"}}>{metadata.title}</Heading>
+                    <Heading size='xl' style={{padding:"0px 10px 0px 0px"}}>New {metadata.title}</Heading>
 
                     {/* Insert tags from list of tags from ipfs */}
                     <div className="tags-input-container">
@@ -93,7 +88,6 @@ function Petition(props){
                        {metadata.content}
                     </Text>
                     </CardBody>
-                    </Link>
                     <Divider></Divider>
                     <CardFooter
                         justify='space-between'
@@ -122,7 +116,7 @@ function Petition(props){
             : <></>
             }
         </>
-    );
+    )
 }
 
-export default Petition;
+export default FullPetition

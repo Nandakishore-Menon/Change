@@ -1,3 +1,9 @@
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Redirect,
+  } from "react-router-dom";
 import { Center, Divider, Portal, Stack } from "@chakra-ui/react";
 import AllPetitions from "./AllPetitions";
 import Petition from "./Petition";
@@ -5,6 +11,7 @@ import PetitionForm from "./PetitionForm";
 import { useStateValue } from "../StateProvider";
 import MyPetitions from "./MyPetitions";
 import Profile from "./Profile";
+import FullPetition from "./FullPetition";
 
 // import Web3 from "web3";
 function Homepage(props){// send props displaycount
@@ -21,7 +28,14 @@ function Homepage(props){// send props displaycount
         { props.displayCount == 0 &&
             (
                 <>
-                    <AllPetitions></AllPetitions>
+                    <Router>
+                    <Routes>
+                    <Route path="/petitions/:petitionId" element={<FullPetition/>}/>
+                    <Route path="/" element={<AllPetitions></AllPetitions>} />
+                </Routes>
+                        
+                    </Router>
+                    
                     {/* <Center >
                         <Stack width='4xl'>
                             <Petition/>

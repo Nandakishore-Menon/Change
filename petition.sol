@@ -85,6 +85,18 @@ contract PetitionContract {
         return returnArray;
     }
 
+
+    // get petitions by petitionID 
+    function getPetitionByPid(uint _pid) public view returns(Petition memory){
+
+        for(uint _i=0; _i<petitions.length; ++_i){
+            if(petitions[_i].petitionID == _pid){
+                Petition memory p = petitions[_i];
+                return p;
+            }
+        }
+    }
+
     // ADD A NEW USER
     function addUser(address _userAddr, string memory _userHash) public {
         if(userExists[_userAddr]==false){
@@ -111,6 +123,11 @@ contract PetitionContract {
         comments.push(_c);
         petitions[_petitionID].commentsID.push(cID);
         cID++;
+    }
+
+    // get number of votes for a contract 
+    function getVotes(uint _pid)public view returns(uint){
+        return petitions[_pid].signedUsersAddress.length;
     }
 
      // add a new user who signs a petition
