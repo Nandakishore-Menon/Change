@@ -159,26 +159,33 @@ function MyNavbar(props){
 
     const { isOpen, onOpen, onClose } = useDisclosure()
     return (
-        <Flex flex='1' style={{height:60, backgroundColor:'lightcyan'}}>
+        <Flex
+            bgColor="brand.navbarBG"
+            minH='80px'
+            maxH='100px'
+            h='9vh'
+            p="30px 70px"
+            // style={{height:60, backgroundColor:'lightcyan'}}
+        >
             {/* Insert LOGO */}
             <Center flex='1'>
                 <Stack direction='row' spacing={10} >
                         <Link to={`/`}>
-                            <Button colorScheme='teal' variant='ghost' onClick={() => {}}>
+                            <Button colorScheme='black' variant='ghost' onClick={() => {}}>
                                 Home
                             </Button>
                         </ Link >
-                        
+
                         {
                             active?
                             <>
                                 <Link to={`/startPetition`}>
-                                    <Button colorScheme='teal' variant='ghost' onClick={() => {} }>
+                                    <Button colorScheme='black' variant='ghost' onClick={() => {} }>
                                         Start Petition
                                     </Button>
                                 </Link>
                                 <Link to={`/myPetitions`}>
-                                    <Button colorScheme='teal' variant='ghost' onClick={() => {} }>
+                                    <Button colorScheme='black' variant='ghost' onClick={() => {} }>
                                         My Petitions
                                     </Button>
                                 </Link>
@@ -186,37 +193,43 @@ function MyNavbar(props){
                             :
                             <>
                                 <Link to={`/about`}>
-                                    <Button colorScheme='teal' variant='ghost' onClick={() => {} }>
-                                        About Us                                
+                                    <Button colorScheme='black' variant='ghost' onClick={() => {} }>
+                                        About Us
                                     </Button>
                                 </Link>
                             </>
                         }
-                            
+
                 </Stack>
             </Center>
             <Center>
                 {
-                    state.account ? 
+                    state.account ?
                     // access name somehow
-                    <Link to={`/profile`}> 
+                    <Link to={`/profile`}>
                     <Button colorScheme='teal' variant='ghost' onClick={() => {}}>
                             <Avatar size='sm' ></Avatar>
                     </Button>
                     </Link>
-                    : 
+                    :
                     <>
-                        <Button colorScheme='teal' variant='ghost' onClick={() => onOpen() }>
-                            Login/Signup
+                        <Button
+                            bgColor='brand.buttonBG'
+                            color='brand.fontLight'
+                            borderRadius='buttonRadius'
+                            p='25px 25px' variant='solid'
+                            onClick={() => onOpen() }
+                        >
+                            Login / Signup
                         </Button>
                         <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
                             <ModalOverlay />
-                            
+
                                 <>
                                      <ModalContent>
                                     <ModalHeader>
                                         <Center>
-                                        LOGIN/SIGN-UP
+                                        Login / Signup
                                         </Center>
                                     </ModalHeader>
                                     <ModalCloseButton />

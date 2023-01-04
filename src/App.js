@@ -19,7 +19,12 @@ import PetitionForm from "./components/PetitionForm";
 import MyPetitions from "./components/MyPetitions";
 import Profile from "./components/Profile";
 import FullPetition from "./components/FullPetition";
-
+import theme from "./Theme";
+import "@fontsource/dm-sans";
+//import "@fontsource/mulish";
+//import "@fontsource/josefin-sans";
+import "@fontsource/quicksand";
+//import "@fontsource/poppins";
 
 function App(props) {
 
@@ -59,7 +64,7 @@ function App(props) {
 
 return (<>
         <StateProvider initialState = {initialState} reducer = {reducer}>
-        <ChakraProvider>
+        <ChakraProvider theme={theme}>
             {/* <MainPage/> */}
             <MyNavbar />
                 <Routes>

@@ -9,6 +9,8 @@
     "@coinbase/wallet-sdk": "^3.6.3",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@fontsource/dm-sans": "^4.5.9",
+    "@fontsource/quicksand": "^4.5.11",
     "@moralisweb3/common-evm-utils": "^2.10.3",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
     "@svgr/webpack": "^5.5.0",
