@@ -4,9 +4,14 @@ import { useStateValue } from '../StateProvider';
 import { Button, Card, CardBody, CardFooter,Center,Divider,Flex,Heading, Image, Stack, Stat, Tag, TagLabel, Text,StatLabel,
     StatNumber,
     StatHelpText,
-    Textarea, } from "@chakra-ui/react";
+    Textarea, Box} from "@chakra-ui/react";
 import { ChatIcon, ArrowUpIcon } from '@chakra-ui/icons'
 import axios from "axios";
+import {uploadComment} from '../util/ipfs'
+
+import AllComments from './AllComments';
+
+
 const FullPetition = props => {
     const {pid} = useParams();
     const [state, dispatch] = useStateValue();
@@ -15,6 +20,7 @@ const FullPetition = props => {
     const [update, setUpdate] = useState(false);
     const [votes,setVotes] = useState(0);
     const [comment, setComment] = useState("");
+    const [dummy, setDummy] = useState(false);
 
     useEffect(()=>{
         const getPid = async() => {
@@ -48,6 +54,14 @@ const FullPetition = props => {
     const upVote = async () => {
         const response = await state.contract.methods.signPetition(pid).send({from:state.account});
         setUpdate(true);
+    }
+
+    const submitComment = async () => {
+        // send the data to ipfs 
+        const commentURL = await uploadComment(comment,state.account);
+        const res = await state.contract.methods.addComment(commentURL,pid).send({from:state.account});
+        setComment("");
+        setDummy(!dummy);
     }
 
     return (
@@ -112,14 +126,24 @@ const FullPetition = props => {
                             </Stat>
                         </Center>
                         <Divider />
+                        </CardFooter>
+                        </Flex>
+                        
+                        <Stack>
+                            <Center>
+                                <Box overflow={"scroll"} h={400} w={"75%"}>
+                                    <AllComments dummy={dummy} petitionID={pid}></AllComments>
+                                </Box>
+                            </Center>
                         <Stack direction={"horizontal"}>
                             <Textarea resize={"none"} placeholder={"Comment here..."} value={comment} onChange={(e)=>{setComment(e.target.value)}}></Textarea>
-                            <Button flex='1' variant='ghost' leftIcon={<ArrowUpIcon></ArrowUpIcon>} onClick={()=>{console.log("contract func to set comments")}}>
+                            <Button flex='1' variant='ghost' leftIcon={<ArrowUpIcon></ArrowUpIcon>} onClick={submitComment}>
                         </Button>
                         </Stack>
+                        </Stack>
                         
-                    </CardFooter>
-                    </Flex>
+                    
+                    
                 </Stack>
             </Card>
             : <></>

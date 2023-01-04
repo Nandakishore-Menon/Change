@@ -74,7 +74,7 @@ function Petition(props){
                 <Stack>
                     
                     <Flex flexDirection='column'>
-                    <Link to = {`/petition/${props.pid}`}>
+                    <Link to = {`/petitions/${props.pid}`}>
                     <CardBody flex='1'>
                     <Heading size='xl' style={{padding:"0px 10px 0px 0px"}}>{metadata.title}</Heading>
 

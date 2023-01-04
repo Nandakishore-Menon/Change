@@ -126,6 +126,21 @@ contract PetitionContract {
         return petitions[_pid].signedUsersAddress.length;
     }
 
+    // get comments for a Petition
+    function getCommentsByID(uint _pid)public view returns(Comment[] memory){
+        require(_pid<petitions.length);
+        Petition memory _p = petitions[_pid];
+        Comment[] memory _returnArray= new Comment[](_p.commentsID.length);
+        uint _j = 0;
+        for(uint _i=0;_i<comments.length;++_i){
+            if(_p.commentsID[_j] == comments[_i].commentID){
+                _returnArray[_j]=comments[_i];
+                ++_j;
+            }
+        }
+        return _returnArray;
+    }
+
      // add a new user who signs a petition
     function signPetition(uint _petitionID) public {
         bool _signed=false;

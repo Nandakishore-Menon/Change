@@ -8,13 +8,16 @@ import { abi } from "../contract/petition";
 function AllPetitions(props){
     const [state, dispatch] = useStateValue();
     const [petitions,setPetitions] = useState([]);
+    
     useEffect(()=>{
-        const get_pet = async () => {
-            const petition_list = await state.contract.methods.getAllPetitions().call({from : state.account});
-            setPetitions(petition_list);
-        }
+        
+            const get_pet = async () => {
+                const petition_list = await state.contract.methods.getAllPetitions().call({from : state.account});
+                setPetitions(petition_list);
 
-        get_pet();
+            }
+
+            get_pet();
     }, []);
 
     const refresh = async () => {
