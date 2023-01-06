@@ -173,7 +173,7 @@ function MyNavbar(props){
             p="30px 70px"
             borderBottom="1px"
             borderColor="brand.mainBG"
-            style={{"box-shadow": "0 2px 6px 0 #efe8fe"}}
+            style={{boxShadow: "0 2px 6px 0 #efe8fe"}}
             // style={{height:60, backgroundColor:'lightcyan'}}
         >
             {/* Insert LOGO */}
