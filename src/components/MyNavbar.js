@@ -222,8 +222,17 @@ function MyNavbar(props){
                             bgColor='brand.buttonBG'
                             color='brand.fontLight'
                             borderRadius='buttonRadius'
+                            border="2px"
+                            borderColor="white"
                             p='25px 25px' variant='solid'
                             onClick={() => onOpen() }
+                            _hover={{
+                                background: "brand.mainBG",
+                                color: "brand.fontDark",
+                                border: "2px",
+                                borderColor: "brand.buttonHover",
+                                margin: "0px",
+                              }}
                         >
                             Login / Signup
                         </Button>
@@ -231,23 +240,36 @@ function MyNavbar(props){
                             <ModalOverlay />
 
                                 <>
-                                     <ModalContent maxW="37vw" borderRadius="modalRadius">
+                                     <ModalContent maxH="450px" borderRadius="modalRadius">
                                     <ModalHeader >
                                         <Center fontSize="30px" fontWeight="700" fontFamily='heading'>
-                                            Let's get started
+                                            {
+                                            (state.userExists != 1)?<Text>Let's get started</Text>:<Text>Use this Wallet?</Text>
+                                            }
                                         </Center>
                                     </ModalHeader>
                                     <ModalCloseButton />
-                                    <ModalBody>
-                                        
-                                        <Stack  maxH={"200px"} h={"28vh"} display="flex" justifyContent={"space-around"}>
+                                    <Center>
+                                    <ModalBody padding="10px" w={"100%"}>
+                                        <Center >
+                                        <Stack  maxH={"280px"} h={"30vh"} w={"100%"}>
                                     
                                             {
                                                 (state.userExists == -1 )?
                                                     <>
+                                                        
+                                                            <Stack w={"100%"}>
+                                                            <Center>
                                                         <WalletButtons onclick={()=>{connect(0)}} icon={metamask} loading={loading} text={"Login with Metamask"} size={"3.5vh"}/>
+                                                        </Center>
+                                                        <Center>
                                                         <WalletButtons onclick={()=>{connect(1)}} icon={coinbase} loading={loading} text={"Login with Coinbase"} size={"6vh"}/>
+                                                        </Center>
+                                                        <Center>
                                                         <WalletButtons onclick={()=>{console.log("unstop")}} icon={unstop} text={"Login with Unstop"} size={"4vh"} />
+                                                        </Center>
+                                                        </Stack>
+                                                        
                                                     </>
                                                 :(
                                                     (state.userExists == 0 )?
@@ -263,60 +285,62 @@ function MyNavbar(props){
                                                     </>
                                                     :
                                                     <>
-                                                        <Card
-                                                            // direction={{ base: 'column', sm: 'row' }}
-                                                            // overflow='hidden'
-                                                            variant='outline'
-                                                        >
+                                                            <Stack w={"100%"} maxH={"250px"} h={"30vh"}>
+                                                                <Center>
+                                                                
+                                                                    <Image h={"14vh"} src={wallet_img} />
+                                                                </Center>
+                                                                <Center>
+                                                                <Card borderRadius="addressRadius" borderWidth="1px" borderColor="brand.mainBG" w={"89%"} maxH="70px">
+                                                                        <></>
+                                                                        <Stack direction={"row"} w={"100%"} display="flex" flexDirection={"column"} justifyContent={"space-around"} padding={"10px"}>
+                                                                            <Center display="flex" flexDirection={"row"} justifyContent={"space-around"}>
+                                                                            <Avatar size="sm" marginRight="10px"></Avatar>
+                                                                            {(acc)?<Text align='center' fontSize="14px" marginRight={"10px"}>
+                                                                                {acc}
+                                                                            </Text>:<></>}
+                                                                            </Center>
+                                                                        </Stack>
 
-                                                            <Stack >
-                                                                <CardBody>
-                                                                <Center>
-                                                                    <Heading size='md'>Use this wallet?</Heading>
-                                                                </Center>
-                                                                <Center>
+
                                                                 
-                                                                    <Image h={20} src={wallet_img} />
-                                                                </Center>
-                                                                <Center>
-                                                                <Box borderRadius="addressRadius" borderWidth="1px" borderColor="brand.mainBG" w={"94%"}>
-                                                                    <Stack direction={"row"}>
-                                                                        <Center>
-                                                                        <Avatar size="sm" margin="4px "></Avatar>
-                                                                        {(acc)?<Text align='center' fontSize="1.1vw">
-                                                                            {acc}
-                                                                        </Text>:<></>}
-                                                                        </Center>
-                                                                    </Stack>
-                                                                
-                                                                </Box>
+                                                                </Card>
                                                                 </Center>
                                                                 <Center>
                                                                         <Button 
                                                                             bgColor='brand.buttonBG'
                                                                             color='brand.fontLight'
+                                                                            border='2px'
                                                                             borderRadius='buttonRadius'
                                                                             p='25px 25px' 
                                                                             mt='15px'
                                                                             variant='solid'
-                                                                            onClick={() => callDispatch()}>
+                                                                            onClick={() => callDispatch()}
+                                                                            _hover={{
+                                                                                background: "brand.mainBG",
+                                                                                color: "brand.fontDark",
+                                                                                border: "2px",
+                                                                                borderColor: "brand.buttonHover",
+                                                                              }}
+                                                                            >
                                                                             Continue
                                                                         </Button>
                                                                     </Center>
-                                                                </CardBody>
 
 
                                                                     
                                                                 
                                                             </Stack>
-                                                        </Card>
                                                     </>
                                                 )
                                             }
                                        
                                         
                                         </Stack>
+                                        </Center>
                                     </ModalBody>
+                                    </Center>
+                                    
 
                                     <ModalFooter>
                                         

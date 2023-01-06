@@ -8,11 +8,12 @@ function WalletButtons(props){
         colorScheme='black' 
         // sx={{background: "brand.mainBG"}}
         _hover={{
-            background: "brand.mainBG",
+            background: "brand.buttonHover",
             color: "brand.fontDark",
           }} 
         variant="outline" 
         borderRadius="walletRadius" 
+        w={"80%"}
         m="3px 0px"
         height="walletButton"
         padding="0px"
