@@ -1,4 +1,4 @@
-import { Button } from "@chakra-ui/react";
+import { Button, Box, Text, Heading } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import Petition from "./Petition";
 import { chakra } from "@chakra-ui/react";
@@ -36,14 +36,26 @@ function AllPetitions(props){
 
     return (<>
         {/* {petitions} */}
-        <Button colorScheme='blue' onClick={refresh}>REFRESH</Button>
+        {/* <Button colorScheme='blue' onClick={refresh}>REFRESH</Button> */}
+        {/* <Box
+                    // bg="#f7f3fe"
+                    pt="20px"
+                    // margin='10px 30px'
+                    h='91vh'
+                    // w="70%"
+                    // borderRadius='40px'
+                > */}
+            <Heading color="#8a307f" ml="15%" fontSize="2.5vw" mb="25px" mt="40px">
+                See the Change Around the World
+            </Heading>
         {
-                    petitions.map((petition)=>{ 
-                        
-                        return (
-                        <Petition key={petition.petitionID} url={petition.petitionHash} votes={petition.signedUsersAddress.length} pid={petition.petitionID}/>
-                    )})
-                }
+            petitions.map((petition)=>{ 
+                
+                return (
+                <Petition key={petition.petitionID} url={petition.petitionHash} votes={petition.signedUsersAddress.length} pid={petition.petitionID}/>
+            )})
+        }
+        {/* </Box> */}
     </>);
 }
 

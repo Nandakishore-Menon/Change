@@ -86,7 +86,7 @@ const FullPetition = props => {
                     
                     <Flex flexDirection='column'>
                     <CardBody flex='1'>
-                    <Heading size='xl' style={{padding:"0px 10px 0px 0px"}}>New {metadata.title}</Heading>
+                    <Heading size='xl' style={{padding:"0px 10px 0px 0px"}}>{metadata.title}</Heading>
 
                     {/* Insert tags from list of tags from ipfs */}
                     <div className="tags-input-container">

@@ -131,6 +131,7 @@ function MyNavbar(props){
             try {
                 // console.log('CALLING ACTIVATE FOR INJECTED WALLET');
                 await activate(Injected);
+                // const tw3 = new Web3( (await Injected.getProvider()));//.providerMap.get("MetaMask"));
                 const tw3 = new Web3( (await Injected.getProvider()).providerMap.get("MetaMask"));
                 const cntrct = new tw3.eth.Contract(abi, process.env.REACT_APP_CONTRACT_ADDRESS);
                 const tempAcc = await Injected.getAccount();
@@ -170,6 +171,9 @@ function MyNavbar(props){
             maxH='100px'
             h='9vh'
             p="30px 70px"
+            borderBottom="1px"
+            borderColor="brand.mainBG"
+            style={{"box-shadow": "0 2px 6px 0 #efe8fe"}}
             // style={{height:60, backgroundColor:'lightcyan'}}
         >
             {/* Insert LOGO */}
@@ -219,18 +223,18 @@ function MyNavbar(props){
                     :
                     <>
                         <Button
-                            bgColor='brand.buttonBG'
-                            color='brand.fontLight'
+                            bgColor='brand.contrast1'
+                            color='brand.fontDark'
                             borderRadius='buttonRadius'
                             border="2px"
                             borderColor="white"
                             p='25px 25px' variant='solid'
                             onClick={() => onOpen() }
                             _hover={{
-                                background: "brand.mainBG",
+                                background: "brand.navbarBG",
                                 color: "brand.fontDark",
                                 border: "2px",
-                                borderColor: "brand.buttonHover",
+                                borderColor: "brand.contrast1",
                                 margin: "0px",
                               }}
                         >
