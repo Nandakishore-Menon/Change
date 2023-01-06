@@ -6,7 +6,8 @@ const theme = extendTheme({
       body: `'Quicksand', sans-serif`,
     },
     fontSizes: {
-      banner: '4.5vw'
+      banner: '4.5vw',
+      headings: '2.6vw'
     },
     colors: {
       brand: {
@@ -15,10 +16,13 @@ const theme = extendTheme({
         buttonBG: '#000000',
         fontLight: '#ffffff',
         fontDark: '#000000',
-        darkBlue: '#6440ed',
+        // darkBlue: '#6440ed',
+        darkBlue: '#8259e1',
         buttonHover: '#e2dafd',
-        // ...
-        900: "#1a202c",
+        palette2: '#cebbf6',
+        palette3: '#8259e1',
+        // contrast1: '#ff897f'
+        contrast1: '#caed7f'
       },
     //   buttonBG: '#000000',
     },

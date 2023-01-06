@@ -14,9 +14,9 @@ const LandingPage = props => {
             <>
                 <Box
                     bg="brand.mainBG"
-                    margin='10px 30px'
+                    margin='3vh 30px'
                     h='85vh'
-                    borderRadius='40px'
+                    borderRadius='30px'
                 >
                     <Center
                         fontSize='banner'

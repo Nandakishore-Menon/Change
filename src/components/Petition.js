@@ -1,7 +1,7 @@
 import { Button, Card, CardBody, CardFooter,Center,Divider,Flex,Heading, Image, Stack, Stat, Tag, TagLabel, Text,StatLabel,
     StatNumber,
     StatHelpText,
-    VStack, HStack, Box, Spacer} from "@chakra-ui/react";
+    VStack, HStack, Box, Spacer, Tooltip} from "@chakra-ui/react";
 import { ChatIcon, ArrowUpIcon } from '@chakra-ui/icons'
 import { useEffect, useState } from "react";
 import { useStateValue } from "../StateProvider";
@@ -9,6 +9,7 @@ import axios from "axios";
 import {Link} from 'react-router-dom'
 import { useNavigate } from "react-router-dom";
 import { SlLike, SlBubble } from "react-icons/sl";
+// import { Tooltip } from "evergreen-ui";
 
 function Petition(props){
     // petition ID, ownerAddress, signed users count, data hash and comments.
@@ -61,18 +62,19 @@ function Petition(props){
                 <Center>
                 <Card
                     direction={{ base: 'column', sm: 'row' }}
-                    w='70vw'
+                    w='70%'
                     h='270px'
-                    m='10px 0px'
+                    m='15px 0px'
                     overflow='hidden'
-                    variant='outline'
+                    variant='elevated'
                     borderRadius='10px'
+                    bg="brand.navbarBG"
                 >
                     {/* <Link to = {`/petitions/${props.pid}`}> */}
                     <Image
                         // objectFit='cover'
                         fit='cover'
-                        maxW={{ base: '100%', sm: '300px' }}
+                        maxW={{ base: '100%', sm: '26%' }}
                         src={metadata.image}
                         alt='Caffe Latte'
                         onClick={()=>{navigate(`/petitions/${props.pid}`)}}
@@ -85,67 +87,88 @@ function Petition(props){
                     
                     <Flex
                         p='0px 20px 0px 15px'
-                        alignItems='left' 
+                        // alignItems='left' 
                         direction='column'
+                        w="74%"
                     >
-                        <Flex
-                            alignItems='center' 
-                        >
+                        
                             
-                            <CardBody>
-                            <Heading fontSize='1.7vw'>{metadata.title}</Heading>
-
-                            { (metadata.tags.split(' ')).map((tag, index) => (
-                                <div key={index} style={{padding:"7px 5px 7px 0px",display:'inline-block'}}>
-                                    <Tag size='md' key='md' variant='subtle' bgColor='brand.mainBG' >
-                                        <TagLabel>{tag}</TagLabel>
-                                    </Tag>
-                                </div> 
-                            )) }
-                            <Text maxHeight='100%' noOfLines={3}>
-                                {metadata.content}
-                                Caffè latte is a coffee beverage of Italian origin made with espresso
-                                and steamed milk.Caffè latte is a coffee beverage of Italian origin made with espresso
-                                and steamed milk.Caffè latte is a coffee beverage of Italian origin made with espresso
-                                and steamed milk.
-                            </Text>
-                            <Link to = {`/petitions/${props.pid}`}> 
-                                <Button
-                                    size="sm"
-                                    variant="link"
-                                    fontWeight="bold"
-                                    colorScheme="slate"
-                                    textDecoration="underline"
-                                    // onClick={handleToggle}
-                                >
-                                    Show more
-                                </Button>
-                            </Link>
-                            </CardBody>
-
+                    <CardBody >
+                        <HStack
+                            // alignItems='center' justifyContent="space-between"
+                            // w="100%"
+                        >
+                            <Box>
+                                <Heading color="#8a307f" fontSize='1.7vw'>{metadata.title}</Heading>
+                                    <HStack>
+                                    { (metadata.tags.split(' ')).map((tag, index) => (
+                                        <div key={index} style={{padding:"7px 5px 7px 0px",display:'inline-block'}}>
+                                            <Tag size='md' key='md' variant='subtle' bgColor='brand.mainBG' >
+                                                <TagLabel>{tag}</TagLabel>
+                                            </Tag>
+                                        </div> 
+                                    )) }
+                                    </HStack>
+                                <Text maxHeight='100%' noOfLines={3}>
+                                    {metadata.content}
+                                </Text>
+                                <Link to = {`/petitions/${props.pid}`}> 
+                                    <Button
+                                        size="sm"
+                                        variant="link"
+                                        fontWeight="bold"
+                                        colorScheme="slate"
+                                        textDecoration="underline"
+                                        _hover={{
+                                            color: "brand.darkBlue"
+                                        }}
+                                    >
+                                        Show more
+                                    </Button>
+                                </Link>
+                            </Box>
+                            
+                            <Spacer/>
                             <Flex 
-                            direction='column'
-                            alignItems='center'
+                                direction='column'
+                                alignItems='center'
                             >
-                                <Text fontSize='4vw' lineHeight='80%'>30</Text>
+                                <Text fontSize='4vw' lineHeight='80%'>{votes}</Text>
                                 <Text fontSize='1.2vw'>supporters</Text>
                             </Flex>
-                        </Flex>
+                        </HStack>
+                    </CardBody>
+                            
 
                         <Spacer />
 
                         <CardFooter pt='0'>
-                            <Box  mr='25px'>
-                                <SlLike style={{fontSize: '25px'}} onClick={upVote}/>
-                                <span style={{visibility: 'hidden'}}>Support</span>
+                            <Box mr='25px'
+                                _hover={{
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                <Tooltip label="Support" placement="bottom">
+                                    <span>
+                                    <SlLike style={{fontSize: '25px'}} onClick={upVote} />
+                                    </span>
+                                </Tooltip>
+                                
                             </Box>
-                            <Box>
-                            <SlBubble style={{fontSize: '25px'}} onClick={()=>{navigate(`/petitions/${props.pid}`)}}/>
+                            <Box mr='25px'
+                                _hover={{
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                <Tooltip label="Comment" placement="bottom">
+                                    <span>
+                                    <SlBubble style={{fontSize: '25px'}} onClick={()=>{navigate(`/petitions/${props.pid}`)}}/>
+                                    </span>
+                                </Tooltip>
+                                
                             </Box>
                             
-                        {/* <Button variant='solid' colorScheme='blue'>
-                            Buy Latte
-                        </Button> */}
+                            
                         </CardFooter>
                     </Flex>
 
@@ -155,74 +178,6 @@ function Petition(props){
                 : <></>
             }
 
-            {
-                (metadata)?
-           <Card
-            overflow='hidden'
-            variant='outline'
-            >
-                <Link to = {`/petitions/${props.pid}`}>
-                <Center style={{width:'100%',height:'300px'}}>
-                    <Image
-                        padding='20px 0px 0px 0px'
-                        fit='contain'
-                        style={{height:'300px',width:'100%'}}
-                        src={metadata.image}
-                        alt='Caffe Latte'
-                    />
-                </Center>
-                </Link>
-                <Stack>
-                    
-                    <Flex flexDirection='column'>
-                    <Link to = {`/petitions/${props.pid}`}>
-                    <CardBody flex='1'>
-                    <Heading size='xl' style={{padding:"0px 10px 0px 0px"}}>{metadata.title}</Heading>
-
-                    {/* Insert tags from list of tags from ipfs */}
-                    <div className="tags-input-container">
-                        { (metadata.tags.split(' ')).map((tag, index) => (
-                            <div key={index} style={{padding:"5px",display:'inline-block'}}>
-                                <Tag size='md' key='md' variant='subtle' colorScheme='cyan' >
-                                    <TagLabel>{tag}</TagLabel>
-                                </Tag>
-                            </div> 
-                        )) }
-                    </div>
-
-                    <Divider></Divider>
-                    <Text py='2' style={{padding:"20px"}}>
-                       {metadata.content}
-                    </Text>
-                    </CardBody>
-                    </Link>
-                    <Divider></Divider>
-                    <CardFooter
-                        justify='space-between'
-                        flexWrap='wrap'
-                        sx={{
-                        '& > button': {
-                            minW: '136px',
-                        },
-                        }}>
-                        <Button flex='1' variant='ghost' leftIcon={<ArrowUpIcon></ArrowUpIcon>} onClick={upVote}>
-                            Vote
-                        </Button>
-                        <Button flex='1' variant='ghost' leftIcon={<ChatIcon></ChatIcon>} onClick={()=>{navigate(`/petitions/${props.pid}`)}}>
-                            Comment
-                        </Button>
-                        <Center >
-                            <Stat >
-                                <StatLabel>Votes</StatLabel>
-                                <StatNumber>{votes}</StatNumber>
-                            </Stat>
-                        </Center>
-                    </CardFooter>
-                    </Flex>
-                </Stack>
-            </Card>
-            : <></>
-            }
         </>
     );
 }
