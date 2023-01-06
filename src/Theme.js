@@ -16,6 +16,7 @@ const theme = extendTheme({
         fontLight: '#ffffff',
         fontDark: '#000000',
         darkBlue: '#6440ed',
+        buttonHover: '#e2dafd',
         // ...
         900: "#1a202c",
       },
