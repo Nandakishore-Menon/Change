@@ -1,6 +1,7 @@
 import { Button, Card, CardBody, CardFooter,Center,Divider,Flex,Heading, Image, Stack, Stat, Tag, TagLabel, Text,StatLabel,
     StatNumber,
-    StatHelpText, } from "@chakra-ui/react";
+    StatHelpText,
+    VStack, HStack, Box, Spacer} from "@chakra-ui/react";
 import { ChatIcon, ArrowUpIcon } from '@chakra-ui/icons'
 import { useEffect, useState } from "react";
 import { useStateValue } from "../StateProvider";
@@ -53,6 +54,69 @@ function Petition(props){
 
     return (
         <>
+
+            {
+                (metadata)?
+                <Center>
+                <Card
+                    direction={{ base: 'column', sm: 'row' }}
+                    w='70vw'
+                    h='250px'
+                    m='10px 0px'
+                    overflow='hidden'
+                    variant='outline'
+                >
+                    <Image
+                        // objectFit='cover'
+                        fit='cover'
+                        maxW={{ base: '100%', sm: '280px' }}
+                        src={metadata.image}
+                        alt='Caffe Latte'
+                    />
+                    
+
+                    
+                    <Flex
+                        p='10px 10px 10px 30px'
+                        alignItems='left' 
+                        direction='column'
+                    >
+                        <Flex
+                            alignItems='center' 
+                        >
+                            <Flex direction='column'
+                            >
+                                <Text fontSize='5vw' lineHeight='80%'>30</Text>
+                                <Text mt='0'>supporters</Text>
+                            </Flex>
+                            
+
+                            <CardBody>
+                            <Heading size='md'>The perfect latte</Heading>
+
+                            <Text py='2'>
+                                Caffè latte is a coffee beverage of Italian origin made with espresso
+                                and steamed milk.Caffè latte is a coffee beverage of Italian origin made with espresso
+                                and steamed milk.Caffè latte is a coffee beverage of Italian origin made with espresso
+                                and steamed milk.
+                            </Text>
+                            </CardBody>
+                        </Flex>
+
+                        <Spacer />
+
+                        <CardFooter p='0'>
+                        <Button variant='solid' colorScheme='blue'>
+                            Buy Latte
+                        </Button>
+                        </CardFooter>
+                    </Flex>
+
+                    
+                </Card>
+                </Center>
+                : <></>
+            }
 
             {
                 (metadata)?
