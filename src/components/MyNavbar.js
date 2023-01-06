@@ -14,7 +14,7 @@ import {
 import metamask from "../assets/metamask.svg"
 import coinbase from "../assets/coinbase.svg"
 import WalletButtons from './WalletButtons';
-import unstop from '../assets/ud.svg';
+import unstop from '../assets/unstop.png';
 import {  useWeb3React } from '@web3-react/core'
 import Web3 from "web3";
 import { abi } from "../contract/petition";
@@ -29,6 +29,7 @@ import {
 import wallet_img from '../assets/wallet.gif';
 import { uploadUserData } from '../util/ipfs';
 import {Link} from 'react-router-dom';
+import { background } from 'ui-box';
 
 function MyNavbar(props){
     const { active, account, library, connector, activate, deactivate } = useWeb3React();
@@ -38,6 +39,7 @@ function MyNavbar(props){
     const [acc, setAcc] = useState();
     const [profileInfo,setProfileInfo] = useState();
     const [bioInfo,setBioInfo] = useState();
+    const [loading, setLoading] = useState("");
 
     const userExist = async (param_contract, param_account)=>{
         var exists = false;
@@ -105,8 +107,9 @@ function MyNavbar(props){
     } 
 
     async function connect(wallet_id) {
-
+        
         if(wallet_id == 1) {
+            setLoading("Login with Coinbase");
             try {
                 await activate(CoinbaseWallet);
                 const temp_web3 = new Web3( CoinbaseWallet.provider);
@@ -124,6 +127,7 @@ function MyNavbar(props){
             }
         }
         else {
+            setLoading("Login with Metamask");
             try {
                 // console.log('CALLING ACTIVATE FOR INJECTED WALLET');
                 await activate(Injected);
@@ -142,6 +146,7 @@ function MyNavbar(props){
                 console.log(ex)
             }
         }
+        setLoading("");
 
     }
         
@@ -226,21 +231,23 @@ function MyNavbar(props){
                             <ModalOverlay />
 
                                 <>
-                                     <ModalContent>
-                                    <ModalHeader>
-                                        <Center>
-                                        Login / Signup
+                                     <ModalContent maxW="37vw" borderRadius="modalRadius">
+                                    <ModalHeader >
+                                        <Center fontSize="30px" fontWeight="700" fontFamily='heading'>
+                                            Let's get started
                                         </Center>
                                     </ModalHeader>
                                     <ModalCloseButton />
                                     <ModalBody>
-                                        <Stack>
+                                        
+                                        <Stack  maxH={"200px"} h={"28vh"} display="flex" justifyContent={"space-around"}>
+                                    
                                             {
                                                 (state.userExists == -1 )?
                                                     <>
-                                                        <WalletButtons onclick={()=>{connect(0)}} icon={metamask} text={"Login with Metamask"}/>
-                                                        <WalletButtons onclick={()=>{connect(1)}} icon={coinbase} text={"Login with Coinbase"} size={"4vh"}/>
-                                                        <WalletButtons onclick={()=>{console.log("unstop")}} icon={unstop} text={"Login with Unstop"} size={"10vh"}/>
+                                                        <WalletButtons onclick={()=>{connect(0)}} icon={metamask} loading={loading} text={"Login with Metamask"} size={"3.5vh"}/>
+                                                        <WalletButtons onclick={()=>{connect(1)}} icon={coinbase} loading={loading} text={"Login with Coinbase"} size={"6vh"}/>
+                                                        <WalletButtons onclick={()=>{console.log("unstop")}} icon={unstop} text={"Login with Unstop"} size={"4vh"} />
                                                     </>
                                                 :(
                                                     (state.userExists == 0 )?
@@ -262,7 +269,7 @@ function MyNavbar(props){
                                                             variant='outline'
                                                         >
 
-                                                            <Stack>
+                                                            <Stack >
                                                                 <CardBody>
                                                                 <Center>
                                                                     <Heading size='md'>Use this wallet?</Heading>
@@ -271,23 +278,43 @@ function MyNavbar(props){
                                                                 
                                                                     <Image h={20} src={wallet_img} />
                                                                 </Center>
+                                                                <Center>
+                                                                <Box borderRadius="addressRadius" borderWidth="1px" borderColor="brand.mainBG" w={"94%"}>
+                                                                    <Stack direction={"row"}>
+                                                                        <Center>
+                                                                        <Avatar size="sm" margin="4px "></Avatar>
+                                                                        {(acc)?<Text align='center' fontSize="1.1vw">
+                                                                            {acc}
+                                                                        </Text>:<></>}
+                                                                        </Center>
+                                                                    </Stack>
                                                                 
-                                                                {(acc)?<Text>
-                                                                    {acc}
-                                                                </Text>:<></>}
+                                                                </Box>
+                                                                </Center>
+                                                                <Center>
+                                                                        <Button 
+                                                                            bgColor='brand.buttonBG'
+                                                                            color='brand.fontLight'
+                                                                            borderRadius='buttonRadius'
+                                                                            p='25px 25px' 
+                                                                            mt='15px'
+                                                                            variant='solid'
+                                                                            onClick={() => callDispatch()}>
+                                                                            Continue
+                                                                        </Button>
+                                                                    </Center>
                                                                 </CardBody>
 
-                                                                <CardFooter>
-                                                                </CardFooter>
+
+                                                                    
+                                                                
                                                             </Stack>
                                                         </Card>
                                                     </>
                                                 )
                                             }
                                        
-                                        <Button colorScheme='teal' onClick={() => callDispatch() }>
-                                            Use this Wallet
-                                        </Button>
+                                        
                                         </Stack>
                                     </ModalBody>
 

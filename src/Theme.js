@@ -6,7 +6,7 @@ const theme = extendTheme({
       body: `'Quicksand', sans-serif`,
     },
     fontSizes: {
-      banner: '70px'
+      banner: '4.5vw'
     },
     colors: {
       brand: {
@@ -22,7 +22,14 @@ const theme = extendTheme({
     //   buttonBG: '#000000',
     },
     radii: {
-      buttonRadius: '30px'
+      buttonRadius: '30px',
+      addressRadius: '30px',
+      walletRadius: '30px',
+      modalRadius: '20px'
+    },
+    sizes: {
+      walletButtonImage: '6vh',
+      walletButton: '7vh'
     }
 
   })
