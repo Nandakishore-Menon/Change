@@ -8,6 +8,7 @@ import { useStateValue } from "../StateProvider";
 import axios from "axios";
 import {Link} from 'react-router-dom'
 import { useNavigate } from "react-router-dom";
+import { SlLike, SlBubble } from "react-icons/sl";
 
 function Petition(props){
     // petition ID, ownerAddress, signed users count, data hash and comments.
@@ -61,54 +62,90 @@ function Petition(props){
                 <Card
                     direction={{ base: 'column', sm: 'row' }}
                     w='70vw'
-                    h='250px'
+                    h='270px'
                     m='10px 0px'
                     overflow='hidden'
                     variant='outline'
+                    borderRadius='10px'
                 >
+                    {/* <Link to = {`/petitions/${props.pid}`}> */}
                     <Image
                         // objectFit='cover'
                         fit='cover'
-                        maxW={{ base: '100%', sm: '280px' }}
+                        maxW={{ base: '100%', sm: '300px' }}
                         src={metadata.image}
                         alt='Caffe Latte'
+                        onClick={()=>{navigate(`/petitions/${props.pid}`)}}
+                        _hover={{
+                            cursor: 'pointer'
+                        }}
                     />
-                    
+                    {/* </Link> */}
 
                     
                     <Flex
-                        p='10px 10px 10px 30px'
+                        p='0px 20px 0px 15px'
                         alignItems='left' 
                         direction='column'
                     >
                         <Flex
                             alignItems='center' 
                         >
-                            <Flex direction='column'
-                            >
-                                <Text fontSize='5vw' lineHeight='80%'>30</Text>
-                                <Text mt='0'>supporters</Text>
-                            </Flex>
                             
-
                             <CardBody>
-                            <Heading size='md'>The perfect latte</Heading>
+                            <Heading fontSize='1.7vw'>{metadata.title}</Heading>
 
-                            <Text py='2'>
+                            { (metadata.tags.split(' ')).map((tag, index) => (
+                                <div key={index} style={{padding:"7px 5px 7px 0px",display:'inline-block'}}>
+                                    <Tag size='md' key='md' variant='subtle' bgColor='brand.mainBG' >
+                                        <TagLabel>{tag}</TagLabel>
+                                    </Tag>
+                                </div> 
+                            )) }
+                            <Text maxHeight='100%' noOfLines={3}>
+                                {metadata.content}
                                 Caffè latte is a coffee beverage of Italian origin made with espresso
                                 and steamed milk.Caffè latte is a coffee beverage of Italian origin made with espresso
                                 and steamed milk.Caffè latte is a coffee beverage of Italian origin made with espresso
                                 and steamed milk.
                             </Text>
+                            <Link to = {`/petitions/${props.pid}`}> 
+                                <Button
+                                    size="sm"
+                                    variant="link"
+                                    fontWeight="bold"
+                                    colorScheme="slate"
+                                    textDecoration="underline"
+                                    // onClick={handleToggle}
+                                >
+                                    Show more
+                                </Button>
+                            </Link>
                             </CardBody>
+
+                            <Flex 
+                            direction='column'
+                            alignItems='center'
+                            >
+                                <Text fontSize='4vw' lineHeight='80%'>30</Text>
+                                <Text fontSize='1.2vw'>supporters</Text>
+                            </Flex>
                         </Flex>
 
                         <Spacer />
 
-                        <CardFooter p='0'>
-                        <Button variant='solid' colorScheme='blue'>
+                        <CardFooter pt='0'>
+                            <Box  mr='25px'>
+                                <SlLike style={{fontSize: '25px'}} onClick={upVote}/>
+                                <span style={{visibility: 'hidden'}}>Support</span>
+                            </Box>
+                            <Box>
+                            <SlBubble style={{fontSize: '25px'}} onClick={()=>{navigate(`/petitions/${props.pid}`)}}/>
+                            </Box>
+                            
+                        {/* <Button variant='solid' colorScheme='blue'>
                             Buy Latte
-                        </Button>
+                        </Button> */}
                         </CardFooter>
                     </Flex>
 
