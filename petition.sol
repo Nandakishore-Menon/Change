@@ -126,6 +126,15 @@ contract PetitionContract {
         return petitions[_pid].signedUsersAddress.length;
     }
 
+    // check if user has voted
+    function hasVoted(uint _pid) public view returns(bool){
+        for(uint _i=0;_i<petitions[_pid].signedUsersAddress.length;++_i){
+            if((petitions[_pid].signedUsersAddress)[_i] == msg.sender){
+                return true;
+            }
+        }
+        return false;
+    }
     // get comments for a Petition
     function getCommentsByID(uint _pid)public view returns(Comment[] memory){
         require(_pid<petitions.length);
