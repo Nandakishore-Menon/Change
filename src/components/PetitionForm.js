@@ -107,7 +107,7 @@ function PetitionForm(props){
             {
                     {
                     "0": 
-                    <Center bgColor={"brand.mainBG"} h="91vh">
+                    <Center bgColor={"brand.formBG"} h="91vh">
                         <Card borderRadius="modalRadius" w="60%" h="70vh"  bgColor={"white"}>
                             
                             <CardHeader>
