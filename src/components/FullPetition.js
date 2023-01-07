@@ -4,7 +4,7 @@ import { useStateValue } from '../StateProvider';
 import { Button, Card, CardBody, CardFooter,Center,Divider,Flex,Heading, Image, Stack, Stat, Tag, TagLabel, Text,StatLabel,
     StatNumber,
     StatHelpText,
-    Textarea, Box, HStack, CircularProgress, CircularProgressLabel} from "@chakra-ui/react";
+    Textarea, Box, HStack, CircularProgress, CircularProgressLabel, Spacer, VStack} from "@chakra-ui/react";
 import { ChatIcon, ArrowUpIcon } from '@chakra-ui/icons'
 import axios from "axios";
 import {uploadComment} from '../util/ipfs'
@@ -68,22 +68,109 @@ const FullPetition = props => {
         <>
             {
                 (petition && metadata)?
-                <Box>
-                    <Heading fontFamily="banner" color="#5e448d" ml="13%" fontSize="3.0vw" mb="25px" mt="40px">
+                <Box w="70%" m="auto" >
+                    <Heading fontFamily="banner" color="brand.heading" fontSize="3.0vw" mb="25px" mt="40px" //ml="13%" mb="25px" mt="40px"
+                    >
                         {metadata.title}
                     </Heading>
-                    <HStack ml="13%">
-                        <Image
-                            // padding='20px 0px 0px 0px'
-                            fit='contain'
-                            style={{height:'300px',width:'100%'}}
-                            src={metadata.image}
-                            alt='Caffe Latte'
-                        />
-                        <CircularProgress value={30} size='100px' color='orange.400' thickness='12px' >
-                            <CircularProgressLabel>40%</CircularProgressLabel>
-                        </CircularProgress>
+                    <HStack alignItems={"top"}>
+                        <Box w="65%">
+                            <Box w="100%" m="0px 20px 20px 0px" style={{float:"left"}}>
+                                <Image 
+                                    // padding='20px 0px 0px 0px'
+                                    fit='fill'
+                                    style={{width:'100%', float:"left"}}
+                                    src={metadata.image}
+                                    alt='Caffe Latte'
+                                />
+                            </Box>
+                            <Text fontSize={"20px"}>
+                                {metadata.content}
+                            </Text>
+                        </Box>
+                        <Spacer/>
+                        <VStack>                        
+                            <CircularProgress 
+                                capIsRound={true} 
+                                value={30} 
+                                size='20vw' 
+                                color='brand.heading' 
+                                trackColor={"brand.mainBG"} 
+                                thickness='12px' 
+                                mb="15px"
+                            >
+                                <CircularProgressLabel>
+                                    <Flex 
+                                        direction='column'
+                                        alignItems='center'
+                                    >
+                                        <Text fontSize='100%' lineHeight='80%'>{votes}</Text>
+                                        <Text fontSize='30%'>/supporters</Text>
+                                    </Flex>
+                                </CircularProgressLabel>
+                            </CircularProgress>
+                            <Button
+                                bgColor='brand.heading'
+                                color='brand.fontLight'
+                                borderRadius='buttonRadius'
+                                border="2px"
+                                borderColor="white"
+                                fontFamily={"heading"}
+                                p='25px 25px' 
+                                variant='solid'
+                                onClick={upVote}
+                                _hover={{
+                                    background: "brand.navbarBG",
+                                    color: "brand.heading",
+                                    border: "2px",
+                                    borderColor: "brand.heading",
+                                    margin: "0px",
+                                  }}
+                            >
+                                Support
+                            </Button>
+
+                            <HStack pt="10px">
+                                <Text>
+                                Tags:
+                                </Text>
+                                <HStack>
+                                    { (metadata.tags.split(' ')).map((tag, index) => (
+                                        <div key={index} style={{padding:"7px 5px 7px 0px",display:'inline-block'}}>
+                                            <Tag size='md' key='md' variant='subtle' bgColor='brand.mainBG' >
+                                                <TagLabel>{tag}</TagLabel>
+                                            </Tag>
+                                        </div> 
+                                    )) }
+                                </HStack>
+                            </HStack>
+                        </VStack>
                     </HStack>
+
+                    <Box 
+                    //comment section
+                        mt="20px"
+                    > 
+                        <Text 
+                            fontSize={"2vw"}
+                            color="brand.heading"
+                        >
+                            Comments
+                        </Text>
+
+                        <Stack>
+                        <Center>
+                            <Box overflow={"scroll"} h={400} w={"75%"}>
+                                <AllComments dummy={dummy} petitionID={pid}></AllComments>
+                            </Box>
+                        </Center>
+                        <Stack direction={"horizontal"}>
+                            <Textarea resize={"none"} placeholder={"Comment here..."} value={comment} onChange={(e)=>{setComment(e.target.value)}}></Textarea>
+                            <Button flex='1' variant='ghost' leftIcon={<ArrowUpIcon></ArrowUpIcon>} onClick={submitComment}>
+                            </Button>
+                        </Stack>
+                    </Stack>
+                    </Box>
                 </Box>
                 : <></>
             }
@@ -94,77 +181,21 @@ const FullPetition = props => {
             overflow='hidden'
             variant='outline'
             >
-                <Center style={{width:'100%',height:'300px'}}>
-                    <Image
-                        padding='20px 0px 0px 0px'
-                        fit='contain'
-                        style={{height:'300px',width:'100%'}}
-                        src={metadata.image}
-                        alt='Caffe Latte'
-                    />
-                </Center>
+                
                 <Stack>
-                    
-                    <Flex flexDirection='column'>
-                    <CardBody flex='1'>
-                    <Heading size='xl' style={{padding:"0px 10px 0px 0px"}}>{metadata.title}</Heading>
-
-                    {/* Insert tags from list of tags from ipfs */}
-                    <div className="tags-input-container">
-                        { (metadata.tags.split(' ')).map((tag, index) => (
-                            <div key={index} style={{padding:"5px",display:'inline-block'}}>
-                                <Tag size='md' key='md' variant='subtle' colorScheme='cyan' >
-                                    <TagLabel>{tag}</TagLabel>
-                                </Tag>
-                            </div> 
-                        )) }
-                    </div>
-
-                    <Divider></Divider>
-                    <Text py='2' style={{padding:"20px"}}>
-                       {metadata.content}
-                    </Text>
-                    </CardBody>
-                    <Divider></Divider>
-                    <CardFooter
-                        justify='space-between'
-                        flexWrap='wrap'
-                        sx={{
-                        '& > button': {
-                            minW: '136px',
-                        },
-                        }}>
-                        <Button flex='1' variant='ghost' leftIcon={<ArrowUpIcon></ArrowUpIcon>} onClick={upVote}>
-                            Vote
-                        </Button>
-                        {/* <Button flex='1' variant='ghost' leftIcon={<ChatIcon></ChatIcon>}>
-                            Comment
-                        </Button> */}
-                        <Center >
-                            <Stat >
-                                <StatLabel>Votes</StatLabel>
-                                <StatNumber>{votes}</StatNumber>
-                            </Stat>
+                      
+                    <Stack>
+                        <Center>
+                            <Box overflow={"scroll"} h={400} w={"75%"}>
+                                <AllComments dummy={dummy} petitionID={pid}></AllComments>
+                            </Box>
                         </Center>
-                        <Divider />
-                        </CardFooter>
-                        </Flex>
-                        
-                        <Stack>
-                            <Center>
-                                <Box overflow={"scroll"} h={400} w={"75%"}>
-                                    <AllComments dummy={dummy} petitionID={pid}></AllComments>
-                                </Box>
-                            </Center>
                         <Stack direction={"horizontal"}>
                             <Textarea resize={"none"} placeholder={"Comment here..."} value={comment} onChange={(e)=>{setComment(e.target.value)}}></Textarea>
                             <Button flex='1' variant='ghost' leftIcon={<ArrowUpIcon></ArrowUpIcon>} onClick={submitComment}>
-                        </Button>
+                            </Button>
                         </Stack>
-                        </Stack>
-                        
-                    
-                    
+                    </Stack>
                 </Stack>
             </Card>
             : <></>

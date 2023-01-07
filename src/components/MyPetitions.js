@@ -33,7 +33,7 @@ function MyPetitions(props){
 
     return (<>
         {/* {petitions} */}
-        <Button colorScheme='blue' onClick={refresh}>REFRESH</Button>
+        {/* <Button colorScheme='blue' onClick={refresh}>REFRESH</Button> */}
         {
                     petitions.map((petition)=>{ 
                         console.log(petition.signedUsersAddress);

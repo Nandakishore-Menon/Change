@@ -4,6 +4,7 @@ import { extendTheme } from '@chakra-ui/react'
 const theme = extendTheme({
     fonts: {
       banner: `'neufreit', sans-serif`,
+      heading: 'Mulish',
       navbar: 'Mulish',
       body: `'Mulish', sans-serif`,
     },
@@ -26,6 +27,7 @@ const theme = extendTheme({
         buttonHover: '#e2dafd',
         palette2: '#cebbf6',
         palette3: '#8259e1',
+        heading: '#5e448d',
         // contrast1: '#ff897f'
         contrast1: '#caed7f'
       },
