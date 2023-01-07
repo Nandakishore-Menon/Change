@@ -45,7 +45,7 @@ function AllPetitions(props){
                     // w="70%"
                     // borderRadius='40px'
                 > */}
-            <Heading color="#5e448d" ml="15%" fontSize="3.0vw" mb="25px" mt="40px">
+            <Heading fontFamily="banner" color="#5e448d" ml="15%" fontSize="3.0vw" mb="25px" mt="40px">
                 See the Change Around the World
             </Heading>
         {

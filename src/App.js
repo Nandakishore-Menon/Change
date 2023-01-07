@@ -25,6 +25,7 @@ import "@fontsource/mulish";
 import "@fontsource/josefin-sans";
 import "@fontsource/quicksand";
 import "@fontsource/poppins";
+import "@fontsource/inter";
 
 function App(props) {
 

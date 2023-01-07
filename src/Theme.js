@@ -3,7 +3,8 @@ import { extendTheme } from '@chakra-ui/react'
 
 const theme = extendTheme({
     fonts: {
-      heading: `'neufreit', sans-serif`,
+      banner: `'neufreit', sans-serif`,
+      navbar: 'Mulish',
       body: `'Mulish', sans-serif`,
     },
     fontSizes: {
@@ -16,6 +17,7 @@ const theme = extendTheme({
       brand: {
         navbarBG: "#ffffff",
         mainBG: '#efe8fe',
+        formBG: '#f3f0f8',
         buttonBG: '#000000',
         fontLight: '#ffffff',
         fontDark: '#000000',

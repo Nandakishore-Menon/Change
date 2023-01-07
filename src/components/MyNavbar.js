@@ -195,7 +195,7 @@ function MyNavbar(props){
             
 
             <Center flex='1' >
-                <Stack direction='row' spacing={10} fontFamily="heading">
+                <Stack direction='row' spacing={10} fontFamily="navbar" fontWeight="bold">
                         <Link to={`/`}>
                             <Button colorScheme='black' variant='ghost' onClick={() => {}} fontSize="navbar">
                                 Home

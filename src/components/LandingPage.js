@@ -28,7 +28,7 @@ const LandingPage = props => {
                         margin='0px 0px'
                     >
 
-                    <VStack alignItems='left' fontFamily={"heading"} fontSize={"5vw"}>
+                    <VStack alignItems='left' fontFamily={"banner"} fontSize={"5vw"}>
                         <HStack>
                         <Text as='span' mr='12px' color='brand.darkBlue' >
                         Change

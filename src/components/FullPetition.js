@@ -4,7 +4,7 @@ import { useStateValue } from '../StateProvider';
 import { Button, Card, CardBody, CardFooter,Center,Divider,Flex,Heading, Image, Stack, Stat, Tag, TagLabel, Text,StatLabel,
     StatNumber,
     StatHelpText,
-    Textarea, Box} from "@chakra-ui/react";
+    Textarea, Box, HStack, CircularProgress, CircularProgressLabel} from "@chakra-ui/react";
 import { ChatIcon, ArrowUpIcon } from '@chakra-ui/icons'
 import axios from "axios";
 import {uploadComment} from '../util/ipfs'
@@ -66,6 +66,27 @@ const FullPetition = props => {
 
     return (
         <>
+            {
+                (petition && metadata)?
+                <Box>
+                    <Heading fontFamily="banner" color="#5e448d" ml="13%" fontSize="3.0vw" mb="25px" mt="40px">
+                        {metadata.title}
+                    </Heading>
+                    <HStack ml="13%">
+                        <Image
+                            // padding='20px 0px 0px 0px'
+                            fit='contain'
+                            style={{height:'300px',width:'100%'}}
+                            src={metadata.image}
+                            alt='Caffe Latte'
+                        />
+                        <CircularProgress value={30} size='100px' color='orange.400' thickness='12px' >
+                            <CircularProgressLabel>40%</CircularProgressLabel>
+                        </CircularProgress>
+                    </HStack>
+                </Box>
+                : <></>
+            }
 
             {
                 (petition && metadata)?
