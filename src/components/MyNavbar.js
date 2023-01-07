@@ -32,6 +32,7 @@ import { uploadUserData } from '../util/ipfs';
 import {Link} from 'react-router-dom';
 import { background } from 'ui-box';
 import Logo from '../assets/Logo.png'
+import { Uauth } from '../components/wallet/Connector';
 
 function MyNavbar(props){
     const { active, account, library, connector, activate, deactivate } = useWeb3React();
@@ -42,6 +43,7 @@ function MyNavbar(props){
     const [profileInfo,setProfileInfo] = useState();
     const [bioInfo,setBioInfo] = useState();
     const [loading, setLoading] = useState("");
+    const [usingUnstoppable, setUsingUnstoppable ] = useState(false);
 
     const userExist = async (param_contract, param_account)=>{
         var exists = false;
@@ -130,7 +132,7 @@ function MyNavbar(props){
                 console.log(ex)
             }
         }
-        else {
+        else if(wallet_id== 0) {
             setLoading("Login with Metamask");
             try {
                 // console.log('CALLING ACTIVATE FOR INJECTED WALLET');
@@ -146,6 +148,91 @@ function MyNavbar(props){
                 setAcc(tempAcc);
                 userExist(cntrct,tempAcc);
                 
+                
+            } catch (ex) {
+                console.log(ex)
+            }
+        }
+        else {
+            setLoading("Login with Unstoppable");
+            try {
+                const authorization = await Uauth.loginWithPopup()
+                console.log(authorization)
+                const profileName = authorization.idToken.name;
+                const profileDescription = authorization.idToken.description;
+                const profilePicture = authorization.idToken.picture;
+                const profileDomain = authorization.idToken.profile;
+
+                await setProfileInfo(await authorization.idToken.name);
+                await setBioInfo(await authorization.idToken.description);
+                // console.log(profileDescription);
+                // console.log(profileName);
+                // console.log("profileInfo ",profileInfo);
+                // console.log("bioInfo ",bioInfo);
+
+                await window.ethereum.enable();
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                // const account = accounts[0];
+                console.log(accounts)
+                const tw3 = new Web3( await window.ethereum.providers[0]);
+                const cntrct = await (new tw3.eth.Contract(abi, process.env.REACT_APP_CONTRACT_ADDRESS));
+                const tempAcc = await accounts[0];
+                console.log(tw3);
+                console.log(cntrct);
+                console.log(tempAcc);
+                await setWeb3(tw3);
+                await setContract(cntrct);
+                await setAcc(accounts[0]);
+                console.log("acc", acc);
+                console.log("web3",web3);
+                console.log("contract",contract);
+                setUsingUnstoppable(true);
+                console.log(usingUnstoppable);
+
+                userExist(cntrct,tempAcc);
+                if(state.userExists == 1){
+                    callDispatch();
+                }
+                else {
+                    
+                    const userInfoURL = await uploadUserData(tempAcc,profileName,profileDescription);
+                    console.log(acc);
+                    await cntrct.methods.addUser(tempAcc,userInfoURL).send({from:tempAcc});
+                    
+                    await dispatch({
+                        type: "setUserExists",
+                        payload: {
+                            userExists: 1,
+                        },
+                    });
+                    // await dispatch({
+                    //     type: "setUserExists",
+                    //     payload: {
+                    //         userExists: 1,
+                    //     },
+                    // });
+                    await dispatch({
+                        type: "setContract",
+                        payload: {
+                            
+                          contract: cntrct,
+                        },
+                      });
+                    await dispatch({
+                        type: "setWeb3",
+                        payload: {
+                          web3: tw3,
+                        },
+                      });
+                      await dispatch({
+                        type: "setAccount",
+                        payload: {
+                          account:tempAcc,
+                        },
+                      });
+                    // await callDispatch();
+
+                }
                 
             } catch (ex) {
                 console.log(ex)
@@ -203,7 +290,7 @@ function MyNavbar(props){
                         </ Link >
 
                         {
-                            active?
+                            active || usingUnstoppable?
                             <>
                                 <Link to={`/startPetition`}>
                                     <Button colorScheme='black' variant='ghost' onClick={() => {} } fontSize="navbar">
@@ -288,7 +375,7 @@ function MyNavbar(props){
                                                         <WalletButtons onclick={()=>{connect(1)}} icon={coinbase} loading={loading} text={"Login with Coinbase"} size={"6vh"}/>
                                                         </Center>
                                                         <Center>
-                                                        <WalletButtons onclick={()=>{console.log("unstop")}} icon={unstop} text={"Login with Unstop"} size={"4vh"} />
+                                                        <WalletButtons onclick={()=>{connect(2)}} icon={unstop} text={"Use Unstoppable profile"} size={"4vh"} />
                                                         </Center>
                                                         </Stack>
                                                         

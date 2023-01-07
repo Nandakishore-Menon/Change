@@ -1,5 +1,6 @@
 import { WalletLinkConnector } from "@web3-react/walletlink-connector";
 import { InjectedConnector } from "@web3-react/injected-connector";
+import UAuth from "@uauth/js"
 
 
 const CoinbaseWallet = new WalletLinkConnector({
@@ -12,4 +13,10 @@ const CoinbaseWallet = new WalletLinkConnector({
   supportedChainIds: [1, 3, 4, 5, 42]
  });
 
-export  {CoinbaseWallet, Injected};
+ const Uauth = new UAuth({
+  clientID: process.env.REACT_APP_CLIENT_ID,
+  redirectUri: process.env.REACT_APP_REDIRECT_URI,
+  scope:"openid wallet email profile"
+})
+
+export  {CoinbaseWallet, Injected, Uauth};

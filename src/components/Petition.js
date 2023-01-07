@@ -1,7 +1,7 @@
 import { Button, Card, CardBody, CardFooter,Center,Divider,Flex,Heading, Image, Stack, Stat, Tag, TagLabel, Text,StatLabel,
     StatNumber,
     StatHelpText,
-    VStack, HStack, Box, Spacer, Tooltip} from "@chakra-ui/react";
+    VStack, HStack, Box, Spacer, Tooltip, Spinner, SlideFade, useDisclosure} from "@chakra-ui/react";
 import { ChatIcon, ArrowUpIcon } from '@chakra-ui/icons'
 import { useEffect, useState } from "react";
 import { useStateValue } from "../StateProvider";
@@ -10,6 +10,8 @@ import {Link} from 'react-router-dom'
 import { useNavigate } from "react-router-dom";
 import { SlLike, SlBubble } from "react-icons/sl";
 // import { Tooltip } from "evergreen-ui";
+import thumbs from '../assets/thumbs.png';
+import thumbsup from '../assets/thumbsup.png';
 
 function Petition(props){
     // petition ID, ownerAddress, signed users count, data hash and comments.
@@ -18,12 +20,21 @@ function Petition(props){
     const [update, setUpdate] = useState(false);
     const [state,dispatch] = useStateValue();
     const [votes,setVotes] = useState(props.votes);
+    const [loading, setLoading] = useState(false);
+    const { isOpen, onToggle } = useDisclosure();
     const navigate = useNavigate();
     useEffect(()=>{
+        onToggle();
         axios(props.url)
         .then((response)=>{
             setMetadata(response.data);
         });
+        const voted = async () => {
+            const hasVoted = await state.contract.methods.hasVoted(props.pid).call({from: state.account});
+            console.log("hasVoted", hasVoted);
+            setUpdate(hasVoted);
+        }
+        voted();
         // axios({
         //     method: 'get',
         //     url: props.url,
@@ -37,10 +48,13 @@ function Petition(props){
 
     useEffect(()=>{
         const updateVote = async () => {
+            
             console.log(props);
             const petition_count = await state.contract.methods.getVotes(props.pid).call({from: state.account});
             console.log("Petition Count :",petition_count);
+            
             setVotes(petition_count);
+            
         }
         updateVote();
     }, [update]);
@@ -50,13 +64,17 @@ function Petition(props){
     // const [tags,setTags] = useState(["Basketball","GOAT","No Homo"]);
 
     const upVote = async () => {
-        const response = await state.contract.methods.signPetition(props.pid).send({from:state.account});
-        setUpdate(true);
+        setLoading(true);
+        if(update!=true) {
+            const response = await state.contract.methods.signPetition(props.pid).send({from:state.account});
+            setUpdate(true);
+        }
+        setLoading(false);
     }
 
     return (
         <>
-
+            <SlideFade initialScale={0.9}  in={isOpen} >
             {
                 (metadata)?
                 <Center>
@@ -150,7 +168,14 @@ function Petition(props){
                             >
                                 <Tooltip label="Support" placement="bottom">
                                     <span>
-                                    <SlLike style={{fontSize: '25px'}} onClick={upVote} />
+                                        {
+                                            (loading)?
+                                             <Spinner size='xs' />:
+                                        ((!update)?
+                                        <Image src={thumbs} h="25px" style={{fontSize: '25px'}} onClick={upVote} />
+                                        : <Image src={thumbsup} h="25px" style={{fontSize: '25px'}} onClick={upVote} />
+                                        )
+                                        }
                                     </span>
                                 </Tooltip>
                                 
@@ -162,7 +187,7 @@ function Petition(props){
                             >
                                 <Tooltip label="Comment" placement="bottom">
                                     <span>
-                                    <SlBubble style={{fontSize: '25px'}} onClick={()=>{navigate(`/petitions/${props.pid}`)}}/>
+                                    <SlBubble  style={{fontSize: '25px'}} onClick={()=>{navigate(`/petitions/${props.pid}`)}}/>
                                     </span>
                                 </Tooltip>
                                 
@@ -177,7 +202,7 @@ function Petition(props){
                 </Center>
                 : <></>
             }
-
+        </SlideFade>
         </>
     );
 }
