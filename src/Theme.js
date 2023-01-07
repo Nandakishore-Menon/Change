@@ -1,13 +1,16 @@
 import { extendTheme } from '@chakra-ui/react'
 
+
 const theme = extendTheme({
     fonts: {
-      heading: `'DM Sans', sans-serif`,
+      heading: `'neufreit', sans-serif`,
       body: `'Quicksand', sans-serif`,
     },
     fontSizes: {
       banner: '4.5vw',
-      headings: '2.6vw'
+      headings: '2.6vw',
+      navbar: "1.25vw",
+      logo: "1.3vw"
     },
     colors: {
       brand: {

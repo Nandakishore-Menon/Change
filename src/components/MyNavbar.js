@@ -26,10 +26,12 @@ import {
     FormErrorMessage,
     FormHelperText,
   } from '@chakra-ui/react'
+
 import wallet_img from '../assets/wallet.gif';
 import { uploadUserData } from '../util/ipfs';
 import {Link} from 'react-router-dom';
 import { background } from 'ui-box';
+import Logo from '../assets/Logo.png'
 
 function MyNavbar(props){
     const { active, account, library, connector, activate, deactivate } = useWeb3React();
@@ -177,10 +179,23 @@ function MyNavbar(props){
             // style={{height:60, backgroundColor:'lightcyan'}}
         >
             {/* Insert LOGO */}
-            <Center flex='1'>
-                <Stack direction='row' spacing={10} >
+            
+            <Center>
+                <Link to="/">
+                        <Image src={Logo} h={"3.4vw"} p="0px" m="0px"></Image>
+                </Link>
+            </Center>
+            <Center>
+                <Link to="/">
+                    <Text pl="20px" fontWeight="700" fontSize={'logo'}>ChangeWay</Text>
+                </Link>
+            </Center>
+            
+
+            <Center flex='1' >
+                <Stack direction='row' spacing={10} fontFamily="heading">
                         <Link to={`/`}>
-                            <Button colorScheme='black' variant='ghost' onClick={() => {}}>
+                            <Button colorScheme='black' variant='ghost' onClick={() => {}} fontSize="navbar">
                                 Home
                             </Button>
                         </ Link >
@@ -189,12 +204,12 @@ function MyNavbar(props){
                             active?
                             <>
                                 <Link to={`/startPetition`}>
-                                    <Button colorScheme='black' variant='ghost' onClick={() => {} }>
+                                    <Button colorScheme='black' variant='ghost' onClick={() => {} } fontSize="navbar">
                                         Start Petition
                                     </Button>
                                 </Link>
                                 <Link to={`/myPetitions`}>
-                                    <Button colorScheme='black' variant='ghost' onClick={() => {} }>
+                                    <Button colorScheme='black' variant='ghost' onClick={() => {} } fontSize="navbar">
                                         My Petitions
                                     </Button>
                                 </Link>
@@ -202,7 +217,7 @@ function MyNavbar(props){
                             :
                             <>
                                 <Link to={`/about`}>
-                                    <Button colorScheme='black' variant='ghost' onClick={() => {} }>
+                                    <Button colorScheme='black' variant='ghost' onClick={() => {} } fontSize="navbar">
                                         About Us
                                     </Button>
                                 </Link>
@@ -223,18 +238,19 @@ function MyNavbar(props){
                     :
                     <>
                         <Button
-                            bgColor='brand.contrast1'
-                            color='brand.fontDark'
+                            bgColor='black'
+                            color='brand.fontLight'
                             borderRadius='buttonRadius'
                             border="2px"
                             borderColor="white"
+                            fontFamily={"heading"}
                             p='25px 25px' variant='solid'
                             onClick={() => onOpen() }
                             _hover={{
                                 background: "brand.navbarBG",
                                 color: "brand.fontDark",
                                 border: "2px",
-                                borderColor: "brand.contrast1",
+                                borderColor: "black",
                                 margin: "0px",
                               }}
                         >
