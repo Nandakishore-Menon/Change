@@ -21,10 +21,10 @@ import Profile from "./components/Profile";
 import FullPetition from "./components/FullPetition";
 import theme from "./Theme";
 import "@fontsource/dm-sans";
-//import "@fontsource/mulish";
-//import "@fontsource/josefin-sans";
+import "@fontsource/mulish";
+import "@fontsource/josefin-sans";
 import "@fontsource/quicksand";
-//import "@fontsource/poppins";
+import "@fontsource/poppins";
 
 function App(props) {
 

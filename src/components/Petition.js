@@ -99,7 +99,7 @@ function Petition(props){
                             // w="100%"
                         >
                             <Box>
-                                <Heading color="#8a307f" fontSize='1.7vw'>{metadata.title}</Heading>
+                                <Text color="brand.palette3" fontSize='1.7vw'>{metadata.title}</Text>
                                     <HStack>
                                     { (metadata.tags.split(' ')).map((tag, index) => (
                                         <div key={index} style={{padding:"7px 5px 7px 0px",display:'inline-block'}}>
