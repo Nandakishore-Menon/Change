@@ -1,6 +1,6 @@
 // 0 for home, 1 form to start petition, 2 view petitions by user, 3 profile info
 import {React, useState} from 'react';
-import { Avatar, Button, Center, Flex, Stack, useDisclosure, Box, Image, Input, Heading, Text } from '@chakra-ui/react'
+import { Avatar, Button, Center, Flex, Stack, useDisclosure, Box, Image, Input, Heading, Text, HStack, Spacer } from '@chakra-ui/react'
 import {
     Modal,
     ModalOverlay,
@@ -76,6 +76,7 @@ function MyNavbar(props){
 
     const callDispatch = async () => {
         // call uploadUserData
+        setLoading("Uploading");
         if(state.userExists == 0){
             const userInfoURL = await uploadUserData(acc,profileInfo,bioInfo);
             console.log(acc);
@@ -105,6 +106,7 @@ function MyNavbar(props){
         catch(ex){
             console.log(ex);
         }
+        setLoading("");
        
     } 
 
@@ -260,7 +262,7 @@ function MyNavbar(props){
                             <ModalOverlay />
 
                                 <>
-                                     <ModalContent maxH="450px" borderRadius="modalRadius">
+                                     <ModalContent maxH="450px" borderRadius="modalRadius" p="20px 30px 30px 30px">
                                     <ModalHeader >
                                         <Center fontSize="30px" fontWeight="700" fontFamily='heading'>
                                             {
@@ -270,9 +272,9 @@ function MyNavbar(props){
                                     </ModalHeader>
                                     <ModalCloseButton />
                                     <Center>
-                                    <ModalBody padding="10px" w={"100%"}>
+                                    <ModalBody  w={"100%"} m="0px" p="0px">
                                         <Center >
-                                        <Stack  maxH={"280px"} h={"30vh"} w={"100%"}>
+                                        <Stack  maxH={"280px"} h={"40vh"} w={"100%"} justifyContent="space-around" p="0px">
                                     
                                             {
                                                 (state.userExists == -1 )?
@@ -302,25 +304,43 @@ function MyNavbar(props){
                                                             <Input type='Bio' onChange={onBioChange}/>
                                                             <FormHelperText>Tell us about yourself</FormHelperText>
                                                         </FormControl>
+                                                        <Button 
+                                                                            bgColor='brand.buttonBG'
+                                                                            color='brand.fontLight'
+                                                                            border='2px'
+                                                                            borderRadius='buttonRadius'
+                                                                            p='25px 25px' 
+                                                                            variant='solid'
+                                                                            onClick={() => callDispatch()}
+                                                                            _hover={{
+                                                                                background: "brand.mainBG",
+                                                                                color: "brand.fontDark",
+                                                                                border: "2px",
+                                                                                borderColor: "brand.buttonHover",
+                                                                              }}
+                                                                              isLoading={loading != ""}
+                                                                            >
+                                                                            Continue
+                                                                        </Button>
                                                     </>
                                                     :
                                                     <>
-                                                            <Stack w={"100%"} maxH={"250px"} h={"30vh"}>
+                                                            <Stack w={"100%"} maxH={"250px"} h={"30vh"} >
                                                                 <Center>
                                                                 
                                                                     <Image h={"14vh"} src={wallet_img} />
                                                                 </Center>
                                                                 <Center>
-                                                                <Card borderRadius="addressRadius" borderWidth="1px" borderColor="brand.mainBG" w={"89%"} maxH="70px">
+                                                                <Card borderRadius="addressRadius" borderWidth="1px" borderColor="brand.mainBG" w={"100%"} maxH="70px">
                                                                         <></>
-                                                                        <Stack direction={"row"} w={"100%"} display="flex" flexDirection={"column"} justifyContent={"space-around"} padding={"10px"}>
-                                                                            <Center display="flex" flexDirection={"row"} justifyContent={"space-around"}>
-                                                                            <Avatar size="sm" marginRight="10px"></Avatar>
-                                                                            {(acc)?<Text align='center' fontSize="14px" marginRight={"10px"}>
+                                                                        <HStack w={"100%"} p="10px">
+                                                                            <Avatar size="sm" margin="0px 0px 0px 5px"></Avatar>
+                                                                            <Spacer/>
+                                                                            {(acc)?<Text align='center' fontSize="14px" margin="0px 0px 0px 5px">
                                                                                 {acc}
                                                                             </Text>:<></>}
-                                                                            </Center>
-                                                                        </Stack>
+
+                                                                        </HStack>
 
 
                                                                 
@@ -360,11 +380,6 @@ function MyNavbar(props){
                                         </Center>
                                     </ModalBody>
                                     </Center>
-                                    
-
-                                    <ModalFooter>
-                                        
-                                    </ModalFooter>
                                     </ModalContent>
                                 </>
                         </Modal>
