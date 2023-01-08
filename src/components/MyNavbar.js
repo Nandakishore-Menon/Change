@@ -137,8 +137,8 @@ function MyNavbar(props){
             try {
                 // console.log('CALLING ACTIVATE FOR INJECTED WALLET');
                 await activate(Injected);
-                const tw3 = new Web3( (await Injected.getProvider()));//.providerMap.get("MetaMask"));
-                // const tw3 = new Web3( (await Injected.getProvider()).providerMap.get("MetaMask"));
+                // const tw3 = new Web3( (await Injected.getProvider()));//.providerMap.get("MetaMask"));
+                const tw3 = new Web3( (await Injected.getProvider()).providerMap.get("MetaMask"));
                 const cntrct = new tw3.eth.Contract(abi, process.env.REACT_APP_CONTRACT_ADDRESS);
                 const tempAcc = await Injected.getAccount();
                 console.log("temp ACC",tempAcc);

@@ -1,4 +1,4 @@
-import { Button, Center, Input, Spacer, Stack, HStack, Textarea} from "@chakra-ui/react";
+import { Button, Center, Input, Spacer, Stack, HStack, Textarea, Tooltip, Box} from "@chakra-ui/react";
 import { FileUploader, FileCard, Heading } from "evergreen-ui";
 import { useState } from "react";
 import { useStateValue } from "../StateProvider";
@@ -7,6 +7,15 @@ import { useNavigate } from "react-router-dom";
 import {Card, CardHeader, CardBody, CardFooter, Text} from '@chakra-ui/react';
 import {ArrowBackIcon, ArrowForwardIcon} from '@chakra-ui/icons'
 import { TagInput, CornerDialog } from "evergreen-ui";
+import React from "react";
+
+import {
+    Slider,
+    SliderTrack,
+    SliderFilledTrack,
+    SliderThumb,
+    SliderMark,
+  } from '@chakra-ui/react'
 
 function PetitionForm(props){
     const [state,dispatch] = useStateValue();
@@ -16,7 +25,14 @@ function PetitionForm(props){
     let [image, setImage] = useState();
     let [content, setContent] = useState('');
     let [tagList,setTagList] = useState([]);
-    
+    // let [targetSupport, setTargetSupport] = useState(100);
+    const [sliderValue, setSliderValue] = React.useState(10000)
+    const [showTooltip, setShowTooltip] = React.useState(false)
+    const labelStyles = {
+        mt: '2',
+        ml: '-2.5',
+        fontSize: 'sm',
+      }
 
     let handleTitleChange = (e) => {
         let inputValue = e.target.value;
@@ -57,7 +73,7 @@ function PetitionForm(props){
             // console.log(base);
             img_base64 = base;
         })
-        setFormState("4");
+        setFormState("5");
         // console.log("TITLE:\n",titleValue);
         // console.log("CONTENT:\n",content);
         // console.log("IMAGE:\n",img_base64);
@@ -65,7 +81,7 @@ function PetitionForm(props){
         // console.log("submitted");
         let time = new Date().toLocaleString();
         
-        const metadata = await uploadPetition(titleValue, content, time, tagList.join(" "), img_base64);
+        const metadata = await uploadPetition(titleValue, content, time, tagList.join(" "), img_base64, sliderValue);
         console.log("metadata")
         console.log(metadata)
         setContent("");
@@ -75,9 +91,9 @@ function PetitionForm(props){
         console.log("metadata:", metadata[0].path)
         const response = await state.contract.methods.addPetition(metadata[0].path).send({from:state.account});
         console.log("response",response);
-        setFormState("5")
+        setFormState("6")
         await sleep(5000);
-        setFormState("0");
+        // setFormState("0");
         await sleep(3000);
         navigate("/");
     }
@@ -91,6 +107,9 @@ function PetitionForm(props){
         else if(formState == "3") {
             setFormState("2");
         }
+        else if(formState == "4") {
+            setFormState("3");
+        }
     }
     let handleContinue = async (e) => {
         if(formState == "0") {
@@ -101,6 +120,9 @@ function PetitionForm(props){
         }
         else if(formState == "2") {
             setFormState("3");
+        }
+        else if(formState == "3") {
+            setFormState("4");
         }
     }
     return (<>
@@ -444,11 +466,10 @@ function PetitionForm(props){
 
                             }}
 
-                            onClick={()=> handleSubmit()}
-                            isLoading={formState=="4"}
+                            onClick={()=> handleContinue()}
                             >
                                 {/* <ArrowForwardIcon boxSize={8}/></Button> */}
-                                Submit
+                                Continue
                                 </Button>
                             <Spacer/>
                         </HStack>
@@ -465,7 +486,7 @@ function PetitionForm(props){
             <CardHeader>
                 <Center>
                     <Text fontSize="headings" fontWeight="700" mt="2vh">
-                        Describe your movement
+                        Describe the scale of your movement
                     </Text>
                 </Center>
             </CardHeader>
@@ -475,39 +496,50 @@ function PetitionForm(props){
                     {/* <Text>
                         Give a title for your cause. <br></br>
                     </Text> */}
-                    <Text fontSize="20px" fontWeight="700">Show people an image that best describes your movement</Text>
-                    {/* <Textarea
-                        value={tags}
-                        onChange={handleTagChange}
-                        // resize={"none"}
-                        sx={{height: "40vh"}}
-
-                    /> */}
-
-
-<FileUploader
-    label="Upload File"
-    description="You can upload 1 file. File can be up to 50 MB."
-    maxSizeInBytes={50 * 1024 ** 2}
-    maxFiles={1}
-    onChange={handleImageChange}
-    renderFile={(file) => {
-        const { name, size, type } = file
-        const { message } = (size < 50 * 1024 ** 2) ? `Image of size ${size} bytes uploaded` :"File too large";
-        return (
-          <FileCard
-            key={name}
-            isInvalid={size > 50 * 1024 ** 2}
-            name={name}
-            onRemove={handleRemove}
-            sizeInBytes={size}
-            type={type}
-            validationMessage={message}
-          />
-        )
-    }}
-    values={image}
-  />
+                    <Text fontSize="20px" fontWeight="700">How much support do you need?</Text>
+                    <Box p={"4vh 0vh"} m={"vh 0vh"}>
+                    <Slider aria-label='slider-ex-4' defaultValue={sliderValue}
+                        min={100} max={100000}
+                        onChange={(v) => setSliderValue(v)}
+                        onMouseEnter={() => setShowTooltip(true)}
+                        onMouseLeave={() => setShowTooltip(false)}
+                    >
+                        <SliderMark value={0} {...labelStyles}>
+                            0
+                        </SliderMark>
+                        <SliderMark value={25000} {...labelStyles}>
+                            25000
+                        </SliderMark>
+                        <SliderMark value={50000} {...labelStyles}>
+                            50000
+                        </SliderMark>
+                        <SliderMark value={75000} {...labelStyles}>
+                            75000
+                        </SliderMark>
+                        <SliderMark value={100000} {...labelStyles}>
+                            100000
+                        </SliderMark>
+                        <SliderTrack>
+                            <SliderFilledTrack />
+                        </SliderTrack>
+                        
+                        <SliderTrack bg='brand.palette2' h={"15px"} borderRadius="5px">
+                            <SliderFilledTrack bg='brand.heading' />
+                        </SliderTrack>
+                        <Tooltip
+                            hasArrow
+                            bg='black'
+                            color='white'
+                            placement='top'
+                            borderRadius={"15px"}
+                            isOpen={showTooltip}
+                            label={`${sliderValue}`}
+                        >
+                            <SliderThumb boxSize={6}/>
+                        </Tooltip>
+                    </Slider>
+                    </Box>
+                    <Spacer/>
                     <HStack w={"100%"} h={"100%"} pt="1vh" alignItems={"top"}>
                         <Spacer/>
                         <Button
@@ -552,7 +584,7 @@ function PetitionForm(props){
                         }}
 
                         onClick={()=> handleSubmit()}
-                        isLoading={formState=="4"}
+                        isLoading={formState=="5"}
                         >
                             {/* <ArrowForwardIcon boxSize={8}/></Button> */}
                             Submit
@@ -572,7 +604,7 @@ function PetitionForm(props){
         <CardHeader>
             <Center>
                 <Text fontSize="headings" fontWeight="700" mt="2vh">
-                    Describe your movement
+                    Describe the scale of your movement
                 </Text>
             </Center>
         </CardHeader>
@@ -582,39 +614,50 @@ function PetitionForm(props){
                 {/* <Text>
                     Give a title for your cause. <br></br>
                 </Text> */}
-                <Text fontSize="20px" fontWeight="700">Show people an image that best describes your movement</Text>
-                {/* <Textarea
-                    value={tags}
-                    onChange={handleTagChange}
-                    // resize={"none"}
-                    sx={{height: "40vh"}}
-
-                /> */}
-
-
-<FileUploader
-label="Upload File"
-description="You can upload 1 file. File can be up to 50 MB."
-maxSizeInBytes={50 * 1024 ** 2}
-maxFiles={1}
-onChange={handleImageChange}
-renderFile={(file) => {
-    const { name, size, type } = file
-    const { message } = (size < 50 * 1024 ** 2) ? `Image of size ${size} bytes uploaded` :"File too large";
-    return (
-      <FileCard
-        key={name}
-        isInvalid={size > 50 * 1024 ** 2}
-        name={name}
-        onRemove={handleRemove}
-        sizeInBytes={size}
-        type={type}
-        validationMessage={message}
-      />
-    )
-}}
-values={image}
-/>
+                <Text fontSize="20px" fontWeight="700">How much support do you need?</Text>
+                <Box p={"4vh 0vh"} m={"vh 0vh"}>
+                <Slider aria-label='slider-ex-4' defaultValue={sliderValue}
+                    min={100} max={100000}
+                    onChange={(v) => setSliderValue(v)}
+                    onMouseEnter={() => setShowTooltip(true)}
+                    onMouseLeave={() => setShowTooltip(false)}
+                >
+                    <SliderMark value={0} {...labelStyles}>
+                        0
+                    </SliderMark>
+                    <SliderMark value={25000} {...labelStyles}>
+                        25000
+                    </SliderMark>
+                    <SliderMark value={50000} {...labelStyles}>
+                        50000
+                    </SliderMark>
+                    <SliderMark value={75000} {...labelStyles}>
+                        75000
+                    </SliderMark>
+                    <SliderMark value={100000} {...labelStyles}>
+                        100000
+                    </SliderMark>
+                    <SliderTrack>
+                        <SliderFilledTrack />
+                    </SliderTrack>
+                    
+                    <SliderTrack bg='brand.palette2' h={"15px"} borderRadius="5px">
+                        <SliderFilledTrack bg='brand.heading' />
+                    </SliderTrack>
+                    <Tooltip
+                        hasArrow
+                        bg='black'
+                        color='white'
+                        placement='top'
+                        borderRadius={"15px"}
+                        isOpen={showTooltip}
+                        label={`${sliderValue}`}
+                    >
+                        <SliderThumb boxSize={6}/>
+                    </Tooltip>
+                </Slider>
+                </Box>
+                <Spacer/>
                 <HStack w={"100%"} h={"100%"} pt="1vh" alignItems={"top"}>
                     <Spacer/>
                     <Button
@@ -626,7 +669,7 @@ values={image}
                     borderRadius='buttonRadius'
                     variant='solid'
                     // width="6vw"
-                    disabled={formState=="0"}
+                    disabled={true}
                     m="0px"
                     p="20px"
                     _hover={{
@@ -657,9 +700,7 @@ values={image}
                         borderColor: "black",
 
                     }}
-
-                    onClick={()=> handleSubmit()}
-                    isLoading={formState=="4"}
+                    isLoading={formState=="5"}
                     >
                         {/* <ArrowForwardIcon boxSize={8}/></Button> */}
                         Submit
@@ -673,6 +714,123 @@ values={image}
         <CardFooter></CardFooter>
     </Card>
 </Center>,
+"6": <Center bgColor={"brand.mainBG"} h="91vh">
+<Card borderRadius="modalRadius" w="60%" h="70vh"  bgColor={"white"}>
+    
+    <CardHeader>
+        <Center>
+            <Text fontSize="headings" fontWeight="700" mt="2vh">
+                Describe the scale of your movement
+            </Text>
+        </Center>
+    </CardHeader>
+    <CardBody >
+        <Center h={"100%"}>
+            <Stack w={"80%"} h={"100%"}>
+            {/* <Text>
+                Give a title for your cause. <br></br>
+            </Text> */}
+            <Text fontSize="20px" fontWeight="700">How much support do you need?</Text>
+            <Box p={"4vh 0vh"} m={"vh 0vh"}>
+            <Slider aria-label='slider-ex-4' defaultValue={sliderValue}
+                min={100} max={100000}
+                onChange={(v) => setSliderValue(v)}
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)}
+            >
+                <SliderMark value={0} {...labelStyles}>
+                    0
+                </SliderMark>
+                <SliderMark value={25000} {...labelStyles}>
+                    25000
+                </SliderMark>
+                <SliderMark value={50000} {...labelStyles}>
+                    50000
+                </SliderMark>
+                <SliderMark value={75000} {...labelStyles}>
+                    75000
+                </SliderMark>
+                <SliderMark value={100000} {...labelStyles}>
+                    100000
+                </SliderMark>
+                <SliderTrack>
+                    <SliderFilledTrack />
+                </SliderTrack>
+                
+                <SliderTrack bg='brand.palette2' h={"15px"} borderRadius="5px">
+                    <SliderFilledTrack bg='brand.heading' />
+                </SliderTrack>
+                <Tooltip
+                    hasArrow
+                    bg='black'
+                    color='white'
+                    placement='top'
+                    borderRadius={"15px"}
+                    isOpen={showTooltip}
+                    label={`${sliderValue}`}
+                >
+                    <SliderThumb boxSize={6}/>
+                </Tooltip>
+            </Slider>
+            </Box>
+            <Spacer/>
+            <HStack w={"100%"} h={"100%"} pt="1vh" alignItems={"top"}>
+                <Spacer/>
+                <Button
+                onClick={()=>{handleBack()}}
+                bgColor='white'
+                // colorScheme={"black"}
+                color='brand.fontDark'
+                border='2px'
+                borderRadius='buttonRadius'
+                variant='solid'
+                // width="6vw"
+                disabled={formState=="0"}
+                m="0px"
+                p="20px"
+                _hover={{
+                    background: "brand.mainBG",
+                    color: "brand.fontDark",
+                    border: "2px",
+                    borderColor: "brand.buttonHover",
+                }}
+                >
+                {/* <ArrowBackIcon boxSize={8}/> */}
+                Back
+                </Button>
+                <Spacer/>
+                <Button
+                bgColor='black'
+                // colorScheme={"black"}
+                color='brand.fontLight'
+                border='2px'
+                // width="6vw"
+                borderRadius='buttonRadius'
+                variant='solid'
+                disabled={titleValue == ""}
+                m="0px"
+                p="20px"
+                _hover={{
+                    background: "white",
+                    color: "brand.buttonHover",
+                    borderColor: "black",
+
+                }}
+                isLoading={formState=="5"}
+                >
+                    {/* <ArrowForwardIcon boxSize={8}/></Button> */}
+                    Submit
+                    </Button>
+                <Spacer/>
+            </HStack>
+
+            </Stack>
+        </Center>
+    </CardBody>
+    <CardFooter></CardFooter>
+</Card>
+</Center>,
+
                 }[formState]
 
             }
@@ -722,7 +880,7 @@ values={image}
         </Stack> */}
         <CornerDialog
             title="Petition submitted SUCCESSFULLY!"
-            isShown={formState=="5"}
+            isShown={formState=="6"}
             // onCloseComplete={() => {}}
             hasFooter={false}
         >
