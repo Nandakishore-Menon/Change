@@ -1,11 +1,11 @@
-import { Card, CardBody, CardHeader, Heading, Text } from "@chakra-ui/react";
+import { Card, CardBody, CardHeader, Divider, Heading, Text } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Flex,Avatar,Box } from "@chakra-ui/react";
+import { Flex,Avatar,Box, Stack, StackDivider } from "@chakra-ui/react";
 
 
 function Comment(props){
-    const [comment,setComment] = useState("Initial Comment");
+    const [comment,setComment] = useState("");
     const [user, setUser] = useState("Initial User");
     useEffect(()=>{
         const getData = async () => {
@@ -28,17 +28,43 @@ function Comment(props){
     return (<>
     {
         ((comment != null && comment != undefined) && (user != null && user != undefined))?
-        <Card variant="elevated" h={20}>
-            <CardBody>
-            <Flex gap='4' alignItems='center' flexWrap='wrap' direction='row' >
-                    <Avatar name={user} src={""} size="sm"/>
-                    <Box flex='1' h={5}>
-                        <Text size='sm' fontWeight={500}>{user}</Text>
-                    </Box>
+        // <Card variant="elevated" h={20}>
+        //     <CardBody>
+            <Stack direction={"column"}
+                m="10px 0px"
+            >
+                <Flex 
+                    alignItems={"center"}
+                >
+                    <Avatar 
+                        // name={user}
+                        src={""} 
+                        size="md"
+                        mr="13px"
+                    />
+                    <Text fontWeight={"bold"}
+                        color="brand.palette3"
+                        fontSize={"18px"}
+                    >
+                        Username
+                    </Text>
                 </Flex>
-                <Text>{comment}</Text>
-            </CardBody>
-        </Card>: <></>
+                
+                <Text 
+                    // borderLeft={"2px"} 
+                    borderColor={"brand.heading"}
+                    pt="2px"
+                    pl = "10px"
+                    fontSize={"18px"}
+                >
+                    {comment}
+                </Text>
+                {/* <Divider/> */}
+            </Stack>
+            
+        //     </CardBody>
+        // </Card>
+        : <></>
     }
     </>);
 }

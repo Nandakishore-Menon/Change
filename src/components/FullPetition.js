@@ -70,10 +70,42 @@ const FullPetition = props => {
             {
                 (petition && metadata)?
                 <Box w="70%" m="auto" >
-                    <Heading fontFamily="banner" color="brand.heading" fontSize="3.0vw" mb="25px" mt="40px" //ml="13%" mb="25px" mt="40px"
+                    <Heading fontFamily="banner" color="brand.heading" fontSize="3.0vw" mb="10px" mt="40px" //ml="13%" mb="25px" mt="40px"
                     >
                         {metadata.title}
                     </Heading>
+                    <HStack pb="10px">
+                                <Text>
+                                Tags:
+                                </Text>
+                                <HStack>
+                                    { (metadata.tags.split(' ')).map((tag, index) => (
+                                        <div key={index} style={{padding:"7px 5px 7px 0px",display:'inline-block'}}>
+                                            <Tag size='md' key='md' variant='subtle' bgColor='brand.mainBG' >
+                                                <TagLabel>{tag}</TagLabel>
+                                            </Tag>
+                                        </div> 
+                                    )) }
+                                </HStack>
+                            </HStack>
+                    <Flex 
+                        alignItems={"center"}
+                        mb="25px" 
+                    >
+                        <Avatar 
+                            // name={user}
+                            src={""} 
+                            size="sm"
+                            mr="13px"
+                        />
+                        <Text 
+                            fontWeight={"bold"}
+                            color="brand.palette3"
+                        >
+                            Username
+                        </Text>
+                    </Flex>
+
                     <HStack alignItems={"top"}>
                         <Box w="65%">
                             <Box w="100%" m="0px 20px 20px 0px" style={{float:"left"}}>
@@ -106,7 +138,7 @@ const FullPetition = props => {
                                         alignItems='center'
                                     >
                                         <Text fontSize='100%' lineHeight='80%'>{votes}</Text>
-                                        <Text fontSize='30%'>/supporters</Text>
+                                        <Text mt="5px" fontSize='25%'>out of {metadata.target_support}</Text>
                                     </Flex>
                                 </CircularProgressLabel>
                             </CircularProgress>
@@ -131,7 +163,7 @@ const FullPetition = props => {
                                 Support
                             </Button>
 
-                            <HStack pt="10px">
+                            {/* <HStack pt="10px">
                                 <Text>
                                 Tags:
                                 </Text>
@@ -144,24 +176,27 @@ const FullPetition = props => {
                                         </div> 
                                     )) }
                                 </HStack>
-                            </HStack>
+                            </HStack> */}
                         </VStack>
                     </HStack>
 
                     <Box 
                     //comment section
-                        mt="20px"
+                        mt="30px"
+                        mb="30px"
+                        w="85%"
                     > 
                         <Text 
                             fontSize={"2vw"}
                             color="brand.heading"
+                            fontWeight={"bold"}
                         >
                             Comments
                         </Text>
 
-                        <Stack mt="15px">
+                        <Stack mt="20px">
                             <Stack direction={"row"}>
-                                <Avatar src={""} size="sm"/>
+                                <Avatar src={""} size="md"/>
                                 <Stack direction={"column"}
                                     // gap="4px"
                                     w="100%"
@@ -208,9 +243,7 @@ const FullPetition = props => {
                                 </Stack>
                             </Stack>
                             <Center>
-                                <Box overflow={"scroll"}>
-                                    <AllComments dummy={dummy} petitionID={pid}></AllComments>
-                                </Box>
+                                <AllComments dummy={dummy} petitionID={pid}></AllComments>
                             </Center>
                         </Stack>
                     </Box>

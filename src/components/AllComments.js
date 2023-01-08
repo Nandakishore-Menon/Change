@@ -1,4 +1,4 @@
-import { Stack, Flex, Avatar, Box } from "@chakra-ui/react";
+import { Stack, Flex, Avatar, Box, StackDivider } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useStateValue } from "../StateProvider";
 import Comment from "./Comment";
@@ -19,11 +19,19 @@ function AllComments(props) {
     }, [props.dummy]);
 
     return (<>
-        <Stack spacing='4'> 
+        <Stack 
+            divider={<StackDivider borderColor='brand.mainBG' />}
+            mt="15px"
+        > 
             {
                 comments.map((comment, i) => {
-                    console.log("comment", comment);
-                    return (<Comment key={comment.commentID} commentID={comment.commentID} commentURL={comment.commentHash} commentedBy={comment.userAddress}></Comment>);
+                    // console.log("comment", comment);
+                    return (<Comment 
+                        key={comment.commentID} 
+                        commentID={comment.commentID} 
+                        commentURL={comment.commentHash} 
+                        commentedBy={comment.userAddress}></Comment>
+                        );
                     // return (<><h1>Comment {i}</h1></>)
                 })
             }
