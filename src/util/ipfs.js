@@ -55,7 +55,7 @@ const uploadImage = async (title, time, image) => {
     return image_response
 }
 
-const uploadPetition = async (title, content, time, tags, image) => {
+const uploadPetition = async (title, content, time, tags, image, target_support) => {
     const image_response = await uploadImage(title, time, image)
     console.log(image_response.data[0].path)
 
@@ -76,6 +76,7 @@ const uploadPetition = async (title, content, time, tags, image) => {
             time: time,
             image: image_response.data[0].path,
             tags: tags,
+            target_support: target_support,
             
           }
         }
