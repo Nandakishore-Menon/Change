@@ -111,7 +111,7 @@ function Petition(props){
                     >
                         
                             
-                    <CardBody >
+                    <CardBody onClick={()=>{navigate(`/petitions/${props.pid}`)}}>
                         <HStack
                             // alignItems='center' justifyContent="space-between"
                             // w="100%"

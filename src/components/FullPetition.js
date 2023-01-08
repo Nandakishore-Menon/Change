@@ -4,7 +4,7 @@ import { useStateValue } from '../StateProvider';
 import { Button, Card, CardBody, CardFooter,Center,Divider,Flex,Heading, Image, Stack, Stat, Tag, TagLabel, Text,StatLabel,
     StatNumber,
     StatHelpText,
-    Textarea, Box, HStack, CircularProgress, CircularProgressLabel, Spacer, VStack} from "@chakra-ui/react";
+    Textarea, Box, HStack, CircularProgress, CircularProgressLabel, Spacer, VStack, Avatar} from "@chakra-ui/react";
 import { ChatIcon, ArrowUpIcon } from '@chakra-ui/icons'
 import axios from "axios";
 import {uploadComment} from '../util/ipfs'
@@ -21,6 +21,7 @@ const FullPetition = props => {
     const [votes,setVotes] = useState(0);
     const [comment, setComment] = useState("");
     const [dummy, setDummy] = useState(false);
+    const [commentFocus, setCommentFocus] = useState(false);
 
     useEffect(()=>{
         const getPid = async() => {
@@ -124,7 +125,7 @@ const FullPetition = props => {
                                     color: "brand.heading",
                                     border: "2px",
                                     borderColor: "brand.heading",
-                                    margin: "0px",
+                                    // margin: "0px",
                                   }}
                             >
                                 Support
@@ -158,24 +159,66 @@ const FullPetition = props => {
                             Comments
                         </Text>
 
-                        <Stack>
-                        <Center>
-                            <Box overflow={"scroll"} h={400} w={"75%"}>
-                                <AllComments dummy={dummy} petitionID={pid}></AllComments>
-                            </Box>
-                        </Center>
-                        <Stack direction={"horizontal"}>
-                            <Textarea resize={"none"} placeholder={"Comment here..."} value={comment} onChange={(e)=>{setComment(e.target.value)}}></Textarea>
-                            <Button flex='1' variant='ghost' leftIcon={<ArrowUpIcon></ArrowUpIcon>} onClick={submitComment}>
-                            </Button>
+                        <Stack mt="15px">
+                            <Stack direction={"row"}>
+                                <Avatar src={""} size="sm"/>
+                                <Stack direction={"column"}
+                                    // gap="4px"
+                                    w="100%"
+                                >
+                                    <Textarea 
+                                        border={"0px"}
+                                        // borderBottom="4px"
+                                        // borderRadius="0"
+                                        focusBorderColor="brand.heading"
+                                        borderColor="brand.heading"
+                                        placeholder={"Write comment..."}
+                                        // resize={"none"}  
+                                        value={comment} 
+                                        onChange={(e)=>{setComment(e.target.value)}}
+                                        onFocus={()=>{setCommentFocus(true)}} 
+                                        //onBlur={()=>setCommentFocus(false)}
+                                    ></Textarea>
+                                    {
+                                        (commentFocus)?
+                                        <Button 
+                                            bgColor='brand.heading'
+                                            // colorScheme={"black"}
+                                            color='brand.fontLight'
+                                            border='2px'
+                                            // width="6vw"
+                                            borderRadius='buttonRadius'
+                                            variant='solid'
+                                            // disabled={titleValue == ""}
+                                            m="0px"
+                                            p="20px"
+                                            w="85px"
+                                            _hover={{
+                                                background: "white",
+                                                color: "brand.heading",
+                                                borderColor: "brand.heading",
+            
+                                            }}
+                                            isDisabled={comment==""}
+                                            onClick={submitComment}
+                                        >
+                                            Post
+                                        </Button>:<></>
+                                    }
+                                </Stack>
+                            </Stack>
+                            <Center>
+                                <Box overflow={"scroll"}>
+                                    <AllComments dummy={dummy} petitionID={pid}></AllComments>
+                                </Box>
+                            </Center>
                         </Stack>
-                    </Stack>
                     </Box>
                 </Box>
                 : <></>
             }
 
-            {
+            {/* {
                 (petition && metadata)?
            <Card
             overflow='hidden'
@@ -199,7 +242,7 @@ const FullPetition = props => {
                 </Stack>
             </Card>
             : <></>
-            }
+            } */}
         </>
     )
 }
