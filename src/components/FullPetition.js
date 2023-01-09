@@ -27,6 +27,7 @@ const FullPetition = props => {
     const [comment, setComment] = useState("");
     const [dummy, setDummy] = useState(false);
     const [commentFocus, setCommentFocus] = useState(false);
+    const [mintLoading, setMintLoading] = useState(false);
     const [recievedCommentAdded,setRecievedCommentAdded] = useState(false);
     const toast = useToast();
 
@@ -122,24 +123,26 @@ const FullPetition = props => {
         console.log("Claiming NFT");
         // mint nft 
         // call add nft to profile
-
+        setMintLoading(true);
 
         // make a file and push to ipfs
         const tokenURI = await uploadToken(petition.owner,petition.petitionHash,petition.petitionID);
         // use the tokenURI for minting NFT
-        const resMint = await state.nft_contract.methods.createToken(tokenURI[0].path).send({from:state.account})
-        // const tokenID = resMint;
+        const resMint = await state.nft_contract.methods.createNFT(tokenURI).send({from:state.account})
+        const tokenID = resMint;
 
-        // const resAddNFT = await state.contract.methods.addNFT(tokenID).send({from:state.account});
+        const resAddNFT = await state.contract.methods.addNFT(tokenID).send({from:state.account});
         const res = await state.contract.methods.setPetitionMinted(pid).send({from:state.account});
         setIsClaimed(true);
+        setMintLoading(false);
         toast({
-            title: 'Account created.',
-            description: "We've created your account for you.",
+            title: 'NFT Minted!',
+            description: "You've successfully minted an NFT for this petition",
             position: 'top',
             status: 'success',
-            duration: 9000,
+            duration: 4000,
           })
+          
     }
 
     return (
@@ -245,29 +248,13 @@ const FullPetition = props => {
                                     <>
                                         { !isClaimed ? 
                                             <>
-                                                <Button
-                                                    bgColor='black'
-                                                    color='brand.fontLight'
-                                                    borderRadius='buttonRadius'
-                                                    border="2px"
-                                                    borderColor="white"
-                                                    fontFamily={"heading"}
-                                                    p='25px 25px' 
-                                                    // mt={'20px'}
-                                                    variant='solid'
-                                                    onClick={claimNFT}
-                                                    _hover={{
-                                                        background: "white",
-                                                        color: "black",
-                                                        border: "2px",
-                                                        borderColor: "black",
-                                                        // margin: "0px",
-                                                      }}
-                                                >Claim NFT</Button>
+                                                <Button onClick={claimNFT} isLoading={mintLoading}>Claim NFT</Button>
                                             </>
                                             :
                                             <>
-                                                <Text>You have already claimed your NFT</Text>
+                                            <Center>
+                                                <Text>You have claimed your NFT</Text>
+                                                </Center>
                                             </>
                                          }
                                     </> 

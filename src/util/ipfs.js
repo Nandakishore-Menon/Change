@@ -161,6 +161,7 @@ const uploadUserData = async (account, profileInfo,bio, dp) => {
     console.error(error);
   });
 
+  console.log(metadata_path);
   return metadata_path[0].path
 }
 

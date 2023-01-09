@@ -108,7 +108,7 @@ function MyNavbar(props){
         // call uploadUserData
         setLoading("Uploading");
         if(state.userExists == 0){
-            const b64image = await base64(image[0]);
+            const b64image = base64(image[0]);
             const userInfoURL = await uploadUserData(acc,profileInfo,bioInfo, b64image);
             console.log(acc);
             await contract.methods.addUser(acc,userInfoURL).send({from:acc});
