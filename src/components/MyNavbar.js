@@ -1,5 +1,5 @@
 // 0 for home, 1 form to start petition, 2 view petitions by user, 3 profile info
-import {React, useState} from 'react';
+import {React, useEffect, useState} from 'react';
 import { FileUploader, FileCard} from "evergreen-ui";
 
 import { Avatar, Button, Center, Flex, Stack, useDisclosure, Box, Image, Input, Heading, Text, HStack, Spacer } from '@chakra-ui/react'
@@ -29,6 +29,7 @@ import {
     FormErrorMessage,
     FormHelperText,
   } from '@chakra-ui/react'
+  import axios from 'axios';
 
 import wallet_img from '../assets/wallet.gif';
 import { uploadUserData } from '../util/ipfs';
@@ -40,6 +41,7 @@ import Notifications from './Notifications';
 import { Buffer } from 'buffer';
 import { FilePicker } from 'evergreen-ui';
 import {base64} from '../util/ipfs'
+import Petition from './Petition';
 
 function MyNavbar(props){
     const { active, account, library, connector, activate, deactivate } = useWeb3React();
@@ -53,6 +55,9 @@ function MyNavbar(props){
     const [loading, setLoading] = useState("");
     const [usingUnstoppable, setUsingUnstoppable ] = useState(false);
     const [image, setImage] = useState();
+    const [profile, setProfile] = useState();
+
+
 
     let handleRemove = (e) => {
         setImage(undefined);
@@ -103,7 +108,7 @@ function MyNavbar(props){
         // call uploadUserData
         setLoading("Uploading");
         if(state.userExists == 0){
-            const b64image = base64(image[0]);
+            const b64image = await base64(image[0]);
             const userInfoURL = await uploadUserData(acc,profileInfo,bioInfo, b64image);
             console.log(acc);
             await contract.methods.addUser(acc,userInfoURL).send({from:acc});
@@ -135,10 +140,33 @@ function MyNavbar(props){
                   account:acc,
                 },
               });
+              const user = await contract.methods.getUser(acc).call({from:acc});
+                    // console.log(user);
+                    await axios(user.userHash).then(
+                        async (response) => {
+                            setProfile(await response.data);
+                            await dispatch({
+                                type: "setProfile",
+                                payload: {
+                                    profile:response.data,
+                                },
+                            })
+                            console.log('response', response.data.image)
+                        }
+                    );
+                // console.log(await profile)
+                
+                // console.log('after dispatch profile', await state.profile)
+
+
         }
         catch(ex){
             console.log(ex);
         }
+
+
+
+
         setLoading("");
        
     } 
@@ -395,7 +423,11 @@ function MyNavbar(props){
                     <Notifications/>
                     <Link to={`/profile`}>
                     <Button colorScheme='teal' variant='ghost' onClick={() => {}}>
+                        {
+                            (state.profile)?
+                            <Avatar size='sm' src={state.profile.image} />:
                             <Avatar size='sm' ></Avatar>
+                        }
                     </Button>
                     </Link>
                     

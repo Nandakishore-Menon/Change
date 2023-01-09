@@ -6,6 +6,7 @@ import {uploadPetition, base64} from "../util/ipfs";
 import { useNavigate } from "react-router-dom";
 import {Card, CardHeader, CardBody, CardFooter, Text} from '@chakra-ui/react';
 import {ArrowBackIcon, ArrowForwardIcon} from '@chakra-ui/icons'
+import { useToast } from "@chakra-ui/react";
 import { TagInput, CornerDialog } from "evergreen-ui";
 import React from "react";
 
@@ -25,6 +26,7 @@ function PetitionForm(props){
     let [image, setImage] = useState();
     let [content, setContent] = useState('');
     let [tagList,setTagList] = useState([]);
+    const toast = useToast();
     // let [targetSupport, setTargetSupport] = useState(100);
     const [sliderValue, setSliderValue] = React.useState(10000)
     const [showTooltip, setShowTooltip] = React.useState(false)
@@ -92,6 +94,13 @@ function PetitionForm(props){
         const response = await state.contract.methods.addPetition(metadata[0].path).send({from:state.account});
         console.log("response",response);
         setFormState("6")
+        toast({
+            title: 'Petition created!',
+            description: "Your petition was successfully created!",
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+          })
         await sleep(5000);
         // setFormState("0");
         await sleep(3000);
@@ -880,14 +889,14 @@ function PetitionForm(props){
       />
             <Button colorScheme='blue' onClick={handleSubmit}>SUBMIT</Button>
         </Stack> */}
-        <CornerDialog
+        {/* <CornerDialog
             title="Petition submitted SUCCESSFULLY!"
             isShown={formState=="6"}
             // onCloseComplete={() => {}}
             hasFooter={false}
         >
             You will be redirected to the Home Page.
-      </CornerDialog>
+      </CornerDialog> */}
         
     </>);
 }

@@ -8,38 +8,43 @@ import axios from 'axios';
 const Profile = (props) => {
     const [state, dispatch] = useStateValue();
     const [profile, setProfile] = useState();
-    useEffect(()=>{
-        const get_profile = async () => {
-            console.log("methods in contract",state.contract.methods);
-            const user = await state.contract.methods.getUser(state.account).call({from:state.account});
-            console.log(user);
-            axios(user.userHash).then(
-                (response) => {
-                    setProfile(response.data);
-                }
-            );
-        }
-        get_profile();
-    }, []);
+    // useEffect(()=>{
+    //     const set_pet = async () =>{
+    //         const get_profile = async () => {
+    //             console.log("methods in contract",state.contract.methods);
+    //             const user = await state.contract.methods.getUser(state.account).call({from:state.account});
+    //             console.log(user);
+    //             axios(user.userHash).then(
+    //                 async (response) => {
+    //                     setProfile(await response.data);
+    //                     console.log('response', response.data.image)
+    //                 }
+    //             );
+    //         }
+    //         await get_profile();
+    //     }
+    //     set_pet();
+
+    // }, []);
     return (
         <>
         {
-            (profile) ?
+            (state.profile) ?
             <>
             <Center>
                 <Card align='center' h={"50%"} w={"50%"} mt={'8vh'}>
                 <CardBody >
                     <VStack justifyContent={'space-between'}>
                     <Center>
-                    <Avatar boxSize={20} src={profile.image}></Avatar>
+                    <Avatar boxSize={20} src={state.profile.image}/>
                     </Center>
 
                     <Center>
-                        <Heading size='md'> {profile.profile}</Heading>
+                        <Heading size='md'> {state.profile.profile}</Heading>
                     </Center>
                     <Spacer/>
                     <Center>
-                        <Text size='md'> {profile.bio}</Text>
+                        <Text size='md'> {state.profile.bio}</Text>
                     </Center>
                     </VStack>
                     

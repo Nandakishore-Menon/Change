@@ -11,11 +11,13 @@ import {uploadComment} from '../util/ipfs'
 
 import AllComments from './AllComments';
 import {uploadToken} from '../util/ipfs';
+import { useToast } from '@chakra-ui/react';
 
 
 const FullPetition = props => {
     const {pid} = useParams();
     const [isOwner,setIsOwner] = useState(false);
+    const [user, setUser] = useState();
     const [isClaimed,setIsClaimed] = useState(false);
     const [state, dispatch] = useStateValue();
     const [petition, setPetition] = useState();
@@ -26,6 +28,7 @@ const FullPetition = props => {
     const [dummy, setDummy] = useState(false);
     const [commentFocus, setCommentFocus] = useState(false);
     const [recievedCommentAdded,setRecievedCommentAdded] = useState(false);
+    const toast = useToast();
 
     const somethingChanged = () => {
         if(state.contract!=null && state.contract != undefined)state.contract.events.PetitionUpvoted({fromBlock:0}).on(
@@ -66,7 +69,13 @@ const FullPetition = props => {
         const getPid = async() => {
             if(petition == null || petition == undefined) {
                 const pet= await state.contract.methods.getPetitionByPid(pid).call({from:state.account});
+                const usr= await state.contract.methods.getUser(pet.owner).call({from:state.account});
+                axios(usr.userHash)
+                .then((response)=>{
+                    setUser(response.data);
+                });
                 setPetition(pet);
+
                 axios(pet.petitionHash)
                 .then((response)=>{
                     setMetadata(response.data);
@@ -118,12 +127,19 @@ const FullPetition = props => {
         // make a file and push to ipfs
         const tokenURI = await uploadToken(petition.owner,petition.petitionHash,petition.petitionID);
         // use the tokenURI for minting NFT
-        const resMint = await state.nft_contract.methods.createNFT(tokenURI).send({from:state.account})
-        const tokenID = resMint;
+        const resMint = await state.nft_contract.methods.createToken(tokenURI[0].path).send({from:state.account})
+        // const tokenID = resMint;
 
-        const resAddNFT = await state.contract.methods.addNFT(tokenID).send({from:state.account});
+        // const resAddNFT = await state.contract.methods.addNFT(tokenID).send({from:state.account});
         const res = await state.contract.methods.setPetitionMinted(pid).send({from:state.account});
         setIsClaimed(true);
+        toast({
+            title: 'Account created.',
+            description: "We've created your account for you.",
+            position: 'top',
+            status: 'success',
+            duration: 9000,
+          })
     }
 
     return (
@@ -155,7 +171,7 @@ const FullPetition = props => {
                     >
                         <Avatar 
                             // name={user}
-                            src={""} 
+                            src={(user)?`${user.profile}`:''} 
                             size="sm"
                             mr="13px"
                         />
@@ -163,7 +179,7 @@ const FullPetition = props => {
                             fontWeight={"bold"}
                             color="brand.palette3"
                         >
-                            Username
+                            {(user)?`${user.profile}`:''}
                         </Text>
                     </Flex>
 
@@ -183,7 +199,7 @@ const FullPetition = props => {
                             </Text>
                         </Box>
                         <Spacer/>
-                        <VStack>                        
+                        <VStack gap="10px">                        
                             <CircularProgress 
                                 capIsRound={true} 
                                 value={(votes/metadata.target_support)*100} 
@@ -191,7 +207,7 @@ const FullPetition = props => {
                                 color='brand.heading' 
                                 trackColor={"brand.mainBG"} 
                                 thickness='12px' 
-                                mb="15px"
+                                mb="5px"
                             >
                                 <CircularProgressLabel>
                                     <Flex 
@@ -229,7 +245,25 @@ const FullPetition = props => {
                                     <>
                                         { !isClaimed ? 
                                             <>
-                                                <Button onClick={claimNFT}>Claim NFT</Button>
+                                                <Button
+                                                    bgColor='black'
+                                                    color='brand.fontLight'
+                                                    borderRadius='buttonRadius'
+                                                    border="2px"
+                                                    borderColor="white"
+                                                    fontFamily={"heading"}
+                                                    p='25px 25px' 
+                                                    // mt={'20px'}
+                                                    variant='solid'
+                                                    onClick={claimNFT}
+                                                    _hover={{
+                                                        background: "white",
+                                                        color: "black",
+                                                        border: "2px",
+                                                        borderColor: "black",
+                                                        // margin: "0px",
+                                                      }}
+                                                >Claim NFT</Button>
                                             </>
                                             :
                                             <>
@@ -274,7 +308,7 @@ const FullPetition = props => {
 
                         <Stack mt="20px">
                             <Stack direction={"row"}>
-                                <Avatar src={""} size="md"/>
+                                <Avatar src={state.profile.image} size="md"/>
                                 <Stack direction={"column"}
                                     // gap="4px"
                                     w="100%"

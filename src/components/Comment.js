@@ -2,11 +2,14 @@ import { Card, CardBody, CardHeader, Divider, Heading, Text } from "@chakra-ui/r
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Flex,Avatar,Box, Stack, StackDivider } from "@chakra-ui/react";
+import { useStateValue } from "../StateProvider";
 
 
 function Comment(props){
     const [comment,setComment] = useState("");
-    const [user, setUser] = useState("Initial User");
+    const [user, setUser] = useState();
+    const [user_addr, setUser_addr] = useState();
+    const [state, dispatch] = useStateValue();
 
     useEffect(()=>{
         const getData = async () => {
@@ -20,11 +23,29 @@ function Comment(props){
             console.log("comm_data", com_data)
             setComment(com_data.comment);
             // setComment(c);
-            setUser(props.commentedBy);
             // setUser(u);
         }
         getData();
     });
+
+    useEffect(()=>{
+        const set_prof = async () =>{
+            const get_profile = async () => {
+                console.log("methods in contract",state.contract.methods);
+                const user = await state.contract.methods.getUser(props.commentedBy).call({from:state.account});
+                console.log(user);
+                axios(user.userHash).then(
+                    async (response) => {
+                        setUser(await response.data);
+                        console.log('response', response.data.image)
+                    }
+                );
+            }
+            await get_profile();
+        }
+        set_prof();
+
+    }, []);
 
     return (<>
     {
@@ -39,7 +60,7 @@ function Comment(props){
                 >
                     <Avatar 
                         // name={user}
-                        src={""} 
+                        src={user.image} 
                         size="md"
                         mr="13px"
                     />
@@ -47,7 +68,7 @@ function Comment(props){
                         color="brand.palette3"
                         fontSize={"18px"}
                     >
-                        Username
+                        {user.profile}
                     </Text>
                 </Flex>
                 

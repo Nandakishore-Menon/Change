@@ -63,7 +63,13 @@ function App(props) {
                 return {
                     ...state,
                     userExists: action.payload.userExists
+                };
+            case "setProfile":
+                return {
+                    ...state,
+                    profile: action.payload.profile
                 }
+                console.log('dispatch profile', action.payload.profile)
           default:
             return state;
         }

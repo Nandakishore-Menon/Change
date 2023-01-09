@@ -100,6 +100,36 @@ const uploadPetition = async (title, content, time, tags, image, target_support)
 const uploadUserData = async (account, profileInfo,bio, dp) => {
   // const image_response = await uploadImage(title, time, image)
   // console.log(image_response.data[0].path)
+  const img_options = {
+    method: 'POST',
+    url: 'https://deep-index.moralis.io/api/v2/ipfs/uploadFolder',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+      'X-API-Key': `${process.env.REACT_APP_MORALIS_API_KEY}`
+    },
+    data: [
+      {
+        path: `nft/${profileInfo.replace(/ /g,'')}.png`,
+        content: dp
+      }
+    ]
+  };
+
+  var image_response;
+  await axios
+  .request(img_options)
+  .then(async (response) => {
+    image_response =  response;
+    // console.log(response.data);
+  })
+  .catch(function (error) {
+    console.error(error);
+  });
+
+
+
+
 
   const options = {
     method: 'POST',
@@ -115,7 +145,7 @@ const uploadUserData = async (account, profileInfo,bio, dp) => {
         content: {
           profile: profileInfo,
           bio: bio,
-          image: dp
+          image: image_response.data[0].path
         }
       }
     ]
