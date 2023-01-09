@@ -23,6 +23,30 @@ function Petition(props){
     const [loading, setLoading] = useState(false);
     const { isOpen, onToggle } = useDisclosure();
     const navigate = useNavigate();
+
+    const somethingChanged = ()=>{
+
+        if(state.contract!=null && state.contract != undefined)state.contract.events.PetitionUpvoted({fromBlock:0}).on(
+            'data',
+            event => {
+                console.log("Recieved Event in AllPetitions(PetitionLiked)",event);
+                const get_pet = async () => {
+                    // const petition_list = await state.contract.methods.getAllPetitions().call({from : state.account});
+                    // setPetitions(petition_list);
+                    if(metadata!=null && metadata!=undefined){
+                        if(props.pid == event.returnedValues.petitionID){
+                            const newVotes = await state.contract.methods.getVotes(props.pid).call({from: state.account});
+                            setVotes(newVotes);
+                        }
+                    }
+                    console.log("likedddd");
+                }
+
+                get_pet();
+            }
+        )
+    }
+
     useEffect(()=>{
         onToggle();
         axios(props.url)

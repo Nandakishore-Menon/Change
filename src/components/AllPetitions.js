@@ -23,20 +23,6 @@ function AllPetitions(props){
             }
         )
 
-        if(state.contract!=null && state.contract != undefined)state.contract.events.PetitionUpvoted({fromBlock:0}).on(
-            'data',
-            event => {
-                console.log("Recieved Event in AllPetitions(PetitionLiked)",event);
-                const get_pet = async () => {
-                    const petition_list = await state.contract.methods.getAllPetitions().call({from : state.account});
-                    setPetitions([]);
-                    setPetitions(petition_list);
-                    console.log("likedddd");
-                }
-
-                get_pet();
-            }
-        )
     }
 
     useEffect(()=>{
