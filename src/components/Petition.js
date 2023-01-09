@@ -31,16 +31,12 @@ function Petition(props){
             event => {
                 console.log("Recieved Event in AllPetitions(PetitionLiked)",event);
                 const get_pet = async () => {
-                    // const petition_list = await state.contract.methods.getAllPetitions().call({from : state.account});
-                    // setPetitions(petition_list);
-                    if(metadata!=null && metadata!=undefined){
-                        if(props.pid == event.returnedValues.petitionID){
-                            const newVotes = await state.contract.methods.getVotes(props.pid).call({from: state.account});
-                            console.log("New votes",newVotes);
-                            setVotes(newVotes);
-                        }
+                    if(props.pid === event.returnValues.petitionID){
+                        const newVotes = await state.contract.methods.getVotes(props.pid).call({from: state.account});
+                        // console.log("New votes",newVotes);
+                        setVotes(newVotes);
                     }
-                    console.log("likedddd");
+                    // console.log("likedddd");
                 }
 
                 get_pet();
