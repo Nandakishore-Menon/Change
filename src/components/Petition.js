@@ -59,6 +59,7 @@ function Petition(props){
             setUpdate(hasVoted);
         }
         voted();
+        somethingChanged();
         // axios({
         //     method: 'get',
         //     url: props.url,
