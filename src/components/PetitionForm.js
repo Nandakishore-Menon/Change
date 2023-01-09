@@ -145,7 +145,7 @@ function PetitionForm(props){
                                     {/* <Text>
                                         Give a title for your cause. <br></br>
                                     </Text> */}
-                                    <Text fontWeight="700"> Petition title</Text>
+                                    <Text fontSize={"petitionFormField"} color="brand.heading" fontWeight="700"> Petition title</Text>
                                     <Input w="100%" size='lg' onChange={handleTitleChange} value={titleValue} h={"10vh"}/>
                                     <HStack w={"100%"} h={"100%"} mt="10vh" >
                                         <Spacer/>
@@ -219,7 +219,7 @@ function PetitionForm(props){
                                 {/* <Text>
                                     Give a title for your cause. <br></br>
                                 </Text> */}
-                                <Text fontWeight="700"> Detailed desciption of the petition</Text>
+                                <Text fontSize={"petitionFormField"} color="brand.heading" fontWeight="700"> Detailed desciption of the petition</Text>
                                 <Textarea
                                     value={content}
                                     onChange={handleContentChange}
@@ -299,7 +299,7 @@ function PetitionForm(props){
                             {/* <Text>
                                 Give a title for your cause. <br></br>
                             </Text> */}
-                            <Text fontWeight="700"> List topics that best fits your movement</Text>
+                            <Text fontSize={"petitionFormField"} color="brand.heading"  fontWeight="700"> List topics that best fit your movement</Text>
                             {/* <Textarea
                                 value={tags}
                                 onChange={handleTagChange}
@@ -390,7 +390,7 @@ function PetitionForm(props){
                         {/* <Text>
                             Give a title for your cause. <br></br>
                         </Text> */}
-                        <Text fontSize="20px" fontWeight="700">Show people an image that best describes your movement</Text>
+                        <Text fontSize={"petitionFormField"} color="brand.heading" fontWeight="700">Show people an image that best describes your movement</Text>
                         {/* <Textarea
                             value={tags}
                             onChange={handleTagChange}
@@ -402,10 +402,12 @@ function PetitionForm(props){
 
 <FileUploader
         label="Upload File"
-        description="You can upload 1 file. File can be up to 50 MB."
+        description="Accepted types: jpg, jpeg, png. You can upload 1 file (up to 50 MB)."
         maxSizeInBytes={50 * 1024 ** 2}
         maxFiles={1}
         onChange={handleImageChange}
+        type="image"
+        acceptedMimeTypes={"[image/png, image/jpg, image/jpeg]"}
         renderFile={(file) => {
             const { name, size, type } = file
             const { message } = (size < 50 * 1024 ** 2) ? `Image of size ${size} bytes uploaded` :"File too large";
@@ -496,16 +498,16 @@ function PetitionForm(props){
                     {/* <Text>
                         Give a title for your cause. <br></br>
                     </Text> */}
-                    <Text fontSize="20px" fontWeight="700">How much support do you need?</Text>
+                    <Text fontSize={"petitionFormField"} color="brand.heading" fontWeight="700">How much support do you need?</Text>
                     <Box p={"4vh 0vh"} m={"vh 0vh"}>
                     <Slider aria-label='slider-ex-4' defaultValue={sliderValue}
-                        min={100} max={100000}
+                        min={100} max={100000} step={100}
                         onChange={(v) => setSliderValue(v)}
                         onMouseEnter={() => setShowTooltip(true)}
                         onMouseLeave={() => setShowTooltip(false)}
                     >
-                        <SliderMark value={0} {...labelStyles}>
-                            0
+                        <SliderMark value={100} {...labelStyles}>
+                            100
                         </SliderMark>
                         <SliderMark value={25000} {...labelStyles}>
                             25000

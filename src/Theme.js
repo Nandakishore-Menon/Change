@@ -12,7 +12,8 @@ const theme = extendTheme({
       banner: '4.5vw',
       headings: '2.6vw',
       navbar: "1.25vw",
-      logo: "1.3vw"
+      logo: "1.3vw",
+      petitionFormField: "1.2vw"
     },
     colors: {
       brand: {

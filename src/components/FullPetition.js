@@ -278,9 +278,9 @@ const FullPetition = props => {
                                     }
                                 </Stack>
                             </Stack>
-                            <Center>
+                            {/* <Center> */}
                                 <AllComments dummy={dummy} petitionID={pid}></AllComments>
-                            </Center>
+                            {/* </Center> */}
                         </Stack>
                     </Box>
                 </Box>

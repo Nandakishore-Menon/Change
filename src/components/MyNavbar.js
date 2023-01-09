@@ -179,8 +179,8 @@ function MyNavbar(props){
             try {
                 // console.log('CALLING ACTIVATE FOR INJECTED WALLET');
                 await activate(Injected);
-                // const tw3 = new Web3( (await Injected.getProvider()));//.providerMap.get("MetaMask"));
-                const tw3 = new Web3( (await Injected.getProvider()).providerMap.get("MetaMask"));
+                const tw3 = new Web3( (await Injected.getProvider()));//.providerMap.get("MetaMask"));
+                // const tw3 = new Web3( (await Injected.getProvider()).providerMap.get("MetaMask"));
                 const cntrct = new tw3.eth.Contract(abi, process.env.REACT_APP_CONTRACT_ADDRESS);
                 const nft_cntrct = new tw3.eth.Contract(nft_abi, process.env.REACT_APP_NFT_CONTRACT_ADDRESS);
 
@@ -414,7 +414,7 @@ function MyNavbar(props){
                                     </ModalHeader>
                                     <ModalCloseButton />
                                     <Center>
-                                    <ModalBody  w={"100%"} m="0px" p="0px">
+                                    <ModalBody  w={"120%"} m="0px" p="0px">
                                         <Center >
                                         <Stack  maxH={"280px"} h={"40vh"} w={"100%"} justifyContent="space-around" p="0px">
                                     
