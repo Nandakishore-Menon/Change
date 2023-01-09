@@ -24,45 +24,43 @@ const FullPetition = props => {
     const [commentFocus, setCommentFocus] = useState(false);
     const [recievedCommentAdded,setRecievedCommentAdded] = useState(false);
 
-    if(state.contract!=null && state.contract != undefined)state.contract.events.PetitionUpvoted({fromBlock:0}).on(
-        'data',
-        async (event) => {
-            console.log("Recieved Event in FullPetition(PetitionLiked)",event);
-            if(petition == null || petition == undefined) {
-                const pet= await state.contract.methods.getPetitionByPid(pid).call({from:state.account});
-                setPetition(pet);
-                axios(pet.petitionHash)
-                .then((response)=>{
-                    setMetadata(response.data);
-                });
-                // axios({
-                //     method: 'get',
-                //     url: props.url,
-                //     responseType: 'stream'
-                //   })
-                //     .then(function (response) {
-                //       response.data.pipe(fs.createWriteStream('ada_lovelace.jpg'))
-                //     });
-                console.log("pet", pet);
-                setVotes(pet.signedUsersAddress.length);
+    const somethingChanged = () => {
+        if(state.contract!=null && state.contract != undefined)state.contract.events.PetitionUpvoted({fromBlock:0}).on(
+            'data',
+            async (event) => {
+                console.log("Recieved Event in FullPetition(PetitionLiked)",event);
+                if(petition == null || petition == undefined) {
+                    const pet= await state.contract.methods.getPetitionByPid(pid).call({from:state.account});
+                    setPetition(pet);
+                    axios(pet.petitionHash)
+                    .then((response)=>{
+                        setMetadata(response.data);
+                    });
+                    // axios({
+                    //     method: 'get',
+                    //     url: props.url,
+                    //     responseType: 'stream'
+                    //   })
+                    //     .then(function (response) {
+                    //       response.data.pipe(fs.createWriteStream('ada_lovelace.jpg'))
+                    //     });
+                    console.log("pet", pet);
+                    setVotes(pet.signedUsersAddress.length);
+                }
+                else {
+                    const petition_count = await state.contract.methods.getVotes(pid).call({from: state.account});
+                    setVotes(petition_count);
+                }
             }
-            else {
-                const petition_count = await state.contract.methods.getVotes(pid).call({from: state.account});
-                setVotes(petition_count);
+        )
+    
+        if(state.contract!=null && state.contract != undefined)state.contract.events.CommentAdded({fromBlock:0}).on(
+            'data',
+            async (event) => {
+                console.log("Revieved event of CommentAdded in FullPetition",event);
             }
-        }
-    )
-
-    if(state.contract!=null && state.contract != undefined)state.contract.events.CommentAdded({fromBlock:0}).on(
-        'data',
-        async (event) => {
-            console.log("Revieved event of CommentAdded in FullPetition",event);
-            // setComment("");
-            // setRecievedCommentAdded(!recievedCommentAdded);
-
-            // setDummy(!dummy);
-        }
-    )
+        )
+    }
 
     useEffect(()=>{
         const getPid = async() => {
@@ -88,7 +86,7 @@ const FullPetition = props => {
                 const petition_count = await state.contract.methods.getVotes(pid).call({from: state.account});
                 setVotes(petition_count);
             }
-            
+            somethingChanged();
         }
         getPid();
     }, [update])

@@ -1,41 +1,41 @@
-import { Button, Box, Text, Heading } from "@chakra-ui/react";
+import {  Heading } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import Petition from "./Petition";
-import { chakra } from "@chakra-ui/react";
 import {useStateValue} from '../StateProvider';
-import { abi } from "../contract/petition";
 
 function AllPetitions(props){
     const [state, dispatch] = useStateValue();
     const [petitions,setPetitions] = useState([]);
 
-    if(state.contract!=null && state.contract != undefined)state.contract.events.PetitionAdded({fromBlock:0}).on(
-        'data',
-        (event) => {
-            console.log("Recieved Event in AllPetitions(PetitionAdded)",event);
-            const get_pet = async () => {
-                const petition_list = await state.contract.methods.getAllPetitions().call({from : state.account});
-                setPetitions(petition_list);
+    const somethingChanged = async ()=>{
+        if(state.contract!=null && state.contract != undefined)state.contract.events.PetitionAdded({fromBlock:0}).on(
+            'data',
+            (event) => {
+                console.log("Recieved Event in AllPetitions(PetitionAdded)",event);
+                const get_pet = async () => {
+                    const petition_list = await state.contract.methods.getAllPetitions().call({from : state.account});
+                    setPetitions(petition_list);
 
+                }
+
+                get_pet();
             }
+        )
 
-            get_pet();
-        }
-    )
+        if(state.contract!=null && state.contract != undefined)state.contract.events.PetitionUpvoted({fromBlock:0}).on(
+            'data',
+            event => {
+                console.log("Recieved Event in AllPetitions(PetitionLiked)",event);
+                const get_pet = async () => {
+                    const petition_list = await state.contract.methods.getAllPetitions().call({from : state.account});
+                    setPetitions(petition_list);
 
-    if(state.contract!=null && state.contract != undefined)state.contract.events.PetitionUpvoted({fromBlock:0}).on(
-        'data',
-        event => {
-            console.log("Recieved Event in AllPetitions(PetitionLiked)",event);
-            const get_pet = async () => {
-                const petition_list = await state.contract.methods.getAllPetitions().call({from : state.account});
-                setPetitions(petition_list);
+                }
 
+                get_pet();
             }
-
-            get_pet();
-        }
-    )
+        )
+    }
 
     useEffect(()=>{
         
@@ -44,7 +44,7 @@ function AllPetitions(props){
                 setPetitions(petition_list);
 
             }
-
+            somethingChanged();
             get_pet();
     }, []);
 
