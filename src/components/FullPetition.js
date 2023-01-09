@@ -118,10 +118,14 @@ const FullPetition = props => {
         // make a file and push to ipfs
         const tokenURI = await uploadToken(petition.owner,petition.petitionHash,petition.petitionID);
         // use the tokenURI for minting NFT
-        const resMint = await state.nft_contract.methods.createNFT(tokenURI).send({from:state.account})
+        console.log(state.account);
+        console.log("TokenURI",tokenURI[0].path);
+        const resMint = await state.nft_contract.methods.createToken(tokenURI[0].path).send({from:state.account})
+        console.log("RES",resMint);
         const tokenID = resMint;
 
-        const resAddNFT = await state.contract.methods.addNFT(tokenID).send({from:state.account});
+        // const resAddNFT = await state.contract.methods.addNFT(tokenID).send({from:state.account});
+        // console.log(resAddNFT);
         const res = await state.contract.methods.setPetitionMinted(pid).send({from:state.account});
         setIsClaimed(true);
     }
@@ -229,11 +233,30 @@ const FullPetition = props => {
                                     <>
                                         { !isClaimed ? 
                                             <>
-                                                <Button onClick={claimNFT}>Claim NFT</Button>
+                                                <Button
+                                                    bgColor='brand.heading'
+                                                    color='brand.fontLight'
+                                                    borderRadius='buttonRadius'
+                                                    border="2px"
+                                                    borderColor="white"
+                                                    fontFamily={"heading"}
+                                                    p='25px 25px' 
+                                                    variant='solid'
+                                                    onClick={claimNFT}
+                                                    _hover={{
+                                                        background: "brand.navbarBG",
+                                                        color: "brand.heading",
+                                                        border: "2px",
+                                                        borderColor: "brand.heading",
+                                                        // margin: "0px",
+                                                      }}
+                                                >Claim NFT</Button>
                                             </>
                                             :
                                             <>
-                                                <Text>You have already claimed your NFT</Text>
+                                            <Center>
+                                                <Text>You have claimed your NFT</Text>
+                                                </Center>
                                             </>
                                          }
                                     </> 
