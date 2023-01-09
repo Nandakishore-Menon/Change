@@ -25,6 +25,7 @@ const Notifications = props => {
             console.log("petition_list",petition_list);
             setPetitions(petition_list);
             let tempNotif = [];
+            if(petitions!=null && petitions!= undefined && petitions.length>0)
             for(let i=0;i<petitions.length;++i){
                 // petitions[i].petitionHash;
                 axios(petitions[i].petitionHash)

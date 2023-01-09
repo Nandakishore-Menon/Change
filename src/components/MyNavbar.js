@@ -1,5 +1,7 @@
 // 0 for home, 1 form to start petition, 2 view petitions by user, 3 profile info
 import {React, useState} from 'react';
+import { FileUploader, FileCard} from "evergreen-ui";
+
 import { Avatar, Button, Center, Flex, Stack, useDisclosure, Box, Image, Input, Heading, Text, HStack, Spacer } from '@chakra-ui/react'
 import {
     Modal,
@@ -36,6 +38,8 @@ import Logo from '../assets/Logo.png'
 import { Uauth } from '../components/wallet/Connector';
 import Notifications from './Notifications';
 import { Buffer } from 'buffer';
+import { FilePicker } from 'evergreen-ui';
+import {base64} from '../util/ipfs'
 
 function MyNavbar(props){
     const { active, account, library, connector, activate, deactivate } = useWeb3React();
@@ -48,12 +52,27 @@ function MyNavbar(props){
     const [bioInfo,setBioInfo] = useState();
     const [loading, setLoading] = useState("");
     const [usingUnstoppable, setUsingUnstoppable ] = useState(false);
+    const [image, setImage] = useState();
+
+    let handleRemove = (e) => {
+        setImage(undefined);
+        // console.log("IMAGE:\n",image);
+    }
+
+    let handleImageChange = async (e) => {
+        let inputValue = e;
+        console.log(e);
+        setImage(inputValue);
+        base64(inputValue[0]).then((base)=>{
+            console.log(base);
+        })
+    }
 
     const userExist = async (param_contract, param_account)=>{
         var exists = false;
         console.log("Account in USER EXIST",param_account);
         try {
-            var a = parseInt(param_account, 16);
+            // var a = parseInt(param_account, 16);
             exists = await param_contract.methods.userExists(param_account).call({from:param_account});
         } catch (error) {
             console.log(error);            
@@ -84,7 +103,8 @@ function MyNavbar(props){
         // call uploadUserData
         setLoading("Uploading");
         if(state.userExists == 0){
-            const userInfoURL = await uploadUserData(acc,profileInfo,bioInfo);
+            const b64image = base64(image[0]);
+            const userInfoURL = await uploadUserData(acc,profileInfo,bioInfo, b64image);
             console.log(acc);
             await contract.methods.addUser(acc,userInfoURL).send({from:acc});
         }
@@ -130,32 +150,32 @@ function MyNavbar(props){
             try {
                 await activate(CoinbaseWallet);
 
-                const url = process.env.REACT_APP_NODE_URL;
-                const username = process.env.REACT_APP_NODE_USERNAME;
-                const password = process.env.REACT_APP_NODE_PASSWORD;
+                // const url = process.env.REACT_APP_NODE_URL;
+                // const username = process.env.REACT_APP_NODE_USERNAME;
+                // const password = process.env.REACT_APP_NODE_PASSWORD;
 
-                // Create base64 string of project credentials
-                const string = `${username}:${password}`;
-                const base64String = Buffer.from(string).toString("base64");
+                // // Create base64 string of project credentials
+                // const string = `${username}:${password}`;
+                // const base64String = Buffer.from(string).toString("base64");
 
                 // Options
-                const options = {
-                keepAlive: true,
-                withCredentials: true,
-                timeout: 20000, // ms
-                headers: [
-                    {
-                        name: 'Authorization',
-                        value: `Basic ${base64String}`
-                    },
-                ]
-                };
+                // const options = {
+                // keepAlive: true,
+                // withCredentials: true,
+                // timeout: 20000, // ms
+                // headers: [
+                //     {
+                //         name: 'Authorization',
+                //         value: `Basic ${base64String}`
+                //     },
+                // ]
+                // };
 
                 // Create web3 node provider using project credentials
-                const web3Provider = await new Web3.providers.HttpProvider(url, options);
-                console.log(await web3Provider);
-                // const temp_web3 = new Web3( CoinbaseWallet.provider);
-                const temp_web3 = await new Web3( web3Provider);
+                // const web3Provider = await new Web3.providers.HttpProvider(url, options);
+                // console.log(await web3Provider);
+                const temp_web3 = new Web3( CoinbaseWallet.provider);
+                // const temp_web3 = await new Web3( web3Provider);
                 console.log(await temp_web3);
                 const cntrct = new temp_web3.eth.Contract(abi, process.env.REACT_APP_CONTRACT_ADDRESS);
                 const nft_cntrct = new temp_web3.eth.Contract(nft_abi, process.env.REACT_APP_NFT_CONTRACT_ADDRESS);
@@ -164,11 +184,11 @@ function MyNavbar(props){
                 const tempAcc = await temp_web3.eth.getAccounts();
                 console.log("temp ACC",tempAcc);
                 setWeb3(temp_web3);
-                setAcc(tempAcc);
+                setAcc(tempAcc[0]);
                 setContract(cntrct);
 
                 setNFTContract(nft_cntrct);
-                userExist(cntrct,tempAcc);
+                userExist(cntrct,tempAcc[0]);
                 
             } catch (ex) {
                 console.log(ex)
@@ -179,21 +199,21 @@ function MyNavbar(props){
             try {
                 // console.log('CALLING ACTIVATE FOR INJECTED WALLET');
                 await activate(Injected);
-                const tw3 = new Web3( (await Injected.getProvider()));//.providerMap.get("MetaMask"));
-                // const tw3 = new Web3( (await Injected.getProvider()).providerMap.get("MetaMask"));
+                // const tw3 = new Web3( (await Injected.getProvider()));//.providerMap.get("MetaMask"));
+                const tw3 = new Web3( (await Injected.getProvider()).providerMap.get("MetaMask"));
                 const cntrct = new tw3.eth.Contract(abi, process.env.REACT_APP_CONTRACT_ADDRESS);
                 const nft_cntrct = new tw3.eth.Contract(nft_abi, process.env.REACT_APP_NFT_CONTRACT_ADDRESS);
 
                 const tempAcc = await Injected.getAccount();
-                console.log("temp ACC",tempAcc);
+                console.log("temp ACC",tempAcc[0]);
                 
                 setWeb3(tw3);
                 setContract(cntrct);
                 setNFTContract(nft_cntrct);
 
-                setAcc(tempAcc);
+                setAcc(tempAcc[0]);
                 
-                userExist(cntrct,tempAcc);
+                userExist(cntrct,tempAcc[0]);
                 
                 
             } catch (ex) {
@@ -334,15 +354,16 @@ function MyNavbar(props){
 
             <Center flex='1' >
                 <Stack direction='row' spacing={10} fontFamily="navbar" fontWeight="bold">
-                        <Link to={`/`}>
-                            <Button colorScheme='black' variant='ghost' onClick={() => {}} fontSize="navbar">
-                                Home
-                            </Button>
-                        </ Link >
+                        
 
                         {
                             active || usingUnstoppable?
                             <>
+                                <Link to={`/`}>
+                                <Button colorScheme='black' variant='ghost' onClick={() => {}} fontSize="navbar">
+                                    Home
+                                </Button>
+                            </ Link >
                                 <Link to={`/startPetition`}>
                                     <Button colorScheme='black' variant='ghost' onClick={() => {} } fontSize="navbar">
                                         Start Petition
@@ -356,11 +377,11 @@ function MyNavbar(props){
                             </>
                             :
                             <>
-                                <Link to={`/about`}>
+                                {/* <Link to={`/about`}>
                                     <Button colorScheme='black' variant='ghost' onClick={() => {} } fontSize="navbar">
                                         About Us
                                     </Button>
-                                </Link>
+                                </Link> */}
                             </>
                         }
 
@@ -404,7 +425,7 @@ function MyNavbar(props){
                             <ModalOverlay />
 
                                 <>
-                                     <ModalContent maxH="450px" borderRadius="modalRadius" p="20px 30px 30px 30px">
+                                     <ModalContent maxH="500px" borderRadius="modalRadius" p="20px 30px 30px 30px">
                                     <ModalHeader >
                                         <Center fontSize="30px" fontWeight="700" fontFamily='heading'>
                                             {
@@ -416,7 +437,7 @@ function MyNavbar(props){
                                     <Center>
                                     <ModalBody  w={"120%"} m="0px" p="0px">
                                         <Center >
-                                        <Stack  maxH={"280px"} h={"40vh"} w={"100%"} justifyContent="space-around" p="0px">
+                                        <Stack  maxH={"380px"} h={"50vh"} w={"100%"} justifyContent="space-around" p="0px">
                                     
                                             {
                                                 (state.userExists == -1 )?
@@ -440,11 +461,44 @@ function MyNavbar(props){
                                                     <>
                                                         <FormControl>
                                                             <FormLabel>Profile Name</FormLabel>
-                                                            <Input type='Profile Name ' onChange={onProfileChange}/>
-                                                            <FormHelperText>We'll never share your email.</FormHelperText>
+                                                            <Input type='Profile Name ' onChange={onProfileChange} mb={'10px'}/>
                                                             <FormLabel>Bio</FormLabel>
-                                                            <Input type='Bio' onChange={onBioChange}/>
-                                                            <FormHelperText>Tell us about yourself</FormHelperText>
+                                                            <Input type='Bio' onChange={onBioChange} />
+                                                            <FormHelperText mb={'20px'}>Tell us about yourself</FormHelperText>
+                                                            <Text>Profile picture</Text>
+
+
+                                                            {/* <FileUploader
+                                                                label="Upload File"
+                                                                description="Accepted types: jpg, jpeg, png. You can upload 1 file (up to 50 MB)."
+                                                                maxSizeInBytes={50 * 1024 ** 2}
+                                                                maxFiles={1}
+                                                                onChange={handleImageChange}
+                                                                type="image"
+                                                                acceptedMimeTypes={"[image/png, image/jpg, image/jpeg]"}
+                                                                renderFile={(file) => {
+                                                                    const { name, size, type } = file
+                                                                    const { message } = (size < 50 * 1024 ** 2) ? `Image of size ${size} bytes uploaded` :"File too large";
+                                                                    return (
+                                                                    <FileCard
+                                                                        key={name}
+                                                                        isInvalid={size > 50 * 1024 ** 2}
+                                                                        name={name}
+                                                                        onRemove={handleRemove}
+                                                                        sizeInBytes={size}
+                                                                        type={type}
+                                                                        validationMessage={message}
+                                                                    />
+                                                                    )
+                                                                }}
+                                                                values={image}
+                                                            /> */}
+
+
+
+
+
+                                                            <FilePicker  height={40} name='Profile picture' width={'100%'} onChange={(file) => setImage(file)} placeholder="Select an image!" />
                                                         </FormControl>
                                                         <Button 
                                                                             bgColor='brand.buttonBG'

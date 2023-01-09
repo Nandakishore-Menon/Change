@@ -10,10 +10,13 @@ import axios from "axios";
 import {uploadComment} from '../util/ipfs'
 
 import AllComments from './AllComments';
+import {uploadToken} from '../util/ipfs';
 
 
 const FullPetition = props => {
     const {pid} = useParams();
+    const [isOwner,setIsOwner] = useState(false);
+    const [isClaimed,setIsClaimed] = useState(false);
     const [state, dispatch] = useStateValue();
     const [petition, setPetition] = useState();
     const [metadata, setMetadata] = useState();
@@ -76,8 +79,13 @@ const FullPetition = props => {
                 //     .then(function (response) {
                 //       response.data.pipe(fs.createWriteStream('ada_lovelace.jpg'))
                 //     });
-                console.log("pet", pet);
+                console.log("pet in FullPetition", pet);
                 setVotes(pet.signedUsersAddress.length);
+                
+
+                if(pet.owner == state.account)setIsOwner(true);
+                if(pet.nftMinted)setIsClaimed(true);
+
             }
             else {
                 const petition_count = await state.contract.methods.getVotes(pid).call({from: state.account});
@@ -99,6 +107,23 @@ const FullPetition = props => {
         const res = await state.contract.methods.addComment(commentURL,pid).send({from:state.account});
         setComment("");
         setDummy(!dummy);
+    }
+
+    const claimNFT = async () => {
+        console.log("Claiming NFT");
+        // mint nft 
+        // call add nft to profile
+
+
+        // make a file and push to ipfs
+        const tokenURI = await uploadToken(petition.owner,petition.petitionHash,petition.petitionID);
+        // use the tokenURI for minting NFT
+        const resMint = await state.nft_contract.methods.createNFT(tokenURI).send({from:state.account})
+        const tokenID = resMint;
+
+        const resAddNFT = await state.contract.methods.addNFT(tokenID).send({from:state.account});
+        const res = await state.contract.methods.setPetitionMinted(pid).send({from:state.account});
+        setIsClaimed(true);
     }
 
     return (
@@ -198,7 +223,24 @@ const FullPetition = props => {
                             >
                                 Support
                             </Button>
-
+                            <>
+                                {
+                                    votes>=metadata.target_support && isOwner? 
+                                    <>
+                                        { !isClaimed ? 
+                                            <>
+                                                <Button onClick={claimNFT}>Claim NFT</Button>
+                                            </>
+                                            :
+                                            <>
+                                                <Text>You have already claimed your NFT</Text>
+                                            </>
+                                         }
+                                    </> 
+                                    :
+                                    <></>
+                                }
+                            </>
                             {/* <HStack pt="10px">
                                 <Text>
                                 Tags:

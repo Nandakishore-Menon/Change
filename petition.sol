@@ -4,9 +4,22 @@ pragma solidity ^0.8.0;
 
 contract PetitionContract {
 
+    event PetitionAdded(
+        address indexed addedBy,
+        uint petitionID
+    );
+    event CommentAdded(
+        address indexed commentedBy,
+        uint commentID
+    );
+    event PetitionUpvoted(
+        address indexed upvotedBy,
+        uint petitionID
+    );
+
     struct User{
         address addr;
-        string userHash;// contains name, image and bio
+        string userHash;// contains name and bio
         uint[] petitionNFTIDs;
     }
 
@@ -118,14 +131,16 @@ contract PetitionContract {
         require(userExists[msg.sender],"user does not exist");
         petitions.push(Petition(_pid,msg.sender,_signedUsersAddress,_petitionHash,_commentsID,false));
         petitionsPerUser[msg.sender]++;
+        emit PetitionAdded(msg.sender,_pid);
     }
 
-     // add comment to a petition
+    // add comment to a petition
     function addComment(string memory _commentHash, uint _petitionID) public {
         Comment memory _c = Comment(cID,msg.sender,_commentHash);
         comments.push(_c);
         petitions[_petitionID].commentsID.push(cID);
         cID++;
+        emit CommentAdded(msg.sender,cID-1);
     }
 
     // get number of votes for a contract 
@@ -166,6 +181,7 @@ contract PetitionContract {
         }
         if(!_signed){
             petitions[_petitionID].signedUsersAddress.push(msg.sender);
+            emit PetitionUpvoted(msg.sender,_petitionID);
         }
     }
 

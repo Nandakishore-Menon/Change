@@ -97,7 +97,7 @@ const uploadPetition = async (title, content, time, tags, image, target_support)
     return metadata_path
 }
 
-const uploadUserData = async (account, profileInfo,bio) => {
+const uploadUserData = async (account, profileInfo,bio, dp) => {
   // const image_response = await uploadImage(title, time, image)
   // console.log(image_response.data[0].path)
 
@@ -115,6 +115,7 @@ const uploadUserData = async (account, profileInfo,bio) => {
         content: {
           profile: profileInfo,
           bio: bio,
+          image: dp
         }
       }
     ]
@@ -167,4 +168,43 @@ const uploadComment = async (comment,account) => {
   return metadata_path[0].path
 }
 
-export {uploadPetition, base64, uploadUserData, uploadComment};
+const uploadToken = async (owner,hash,pid) => {
+  // const image_response = await uploadImage(title, time, image)
+  // console.log(image_response.data[0].path)
+
+  const options = {
+    method: 'POST',
+    url: 'https://deep-index.moralis.io/api/v2/ipfs/uploadFolder',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+      'X-API-Key': `${process.env.REACT_APP_MORALIS_API_KEY}`
+    },
+    data: [
+      {
+        path: `NFT/${pid}.json`,
+        content: {
+          petitionID: pid,
+          owner: owner,
+          metadataHash: hash
+        }
+      }
+    ]
+  };
+
+  var metadata_path;
+  await axios
+  .request(options)
+  .then(async (response) => {
+    metadata_path = await response.data;
+    // console.log(response.data);
+  })
+  .catch(function (error) {
+    console.error(error);
+  });
+
+  return metadata_path
+}
+
+
+export {uploadPetition, base64, uploadUserData, uploadComment,uploadToken};

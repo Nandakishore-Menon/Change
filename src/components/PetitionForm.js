@@ -129,7 +129,7 @@ function PetitionForm(props){
             {
                     {
                     "0": 
-                    <Center bgColor={"brand.formBG"} h="91vh">
+                    <Center bgColor={"brand.mainBG"} h="91vh">
                         <Card borderRadius="modalRadius" w="60%" h="70vh"  bgColor={"white"}>
                             
                             <CardHeader>
@@ -501,13 +501,13 @@ function PetitionForm(props){
                     <Text fontSize={"petitionFormField"} color="brand.heading" fontWeight="700">How much support do you need?</Text>
                     <Box p={"4vh 0vh"} m={"vh 0vh"}>
                     <Slider aria-label='slider-ex-4' defaultValue={sliderValue}
-                        min={100} max={100000} step={100}
+                        min={1} max={100000} step={100}
                         onChange={(v) => setSliderValue(v)}
                         onMouseEnter={() => setShowTooltip(true)}
                         onMouseLeave={() => setShowTooltip(false)}
                     >
-                        <SliderMark value={100} {...labelStyles}>
-                            100
+                        <SliderMark value={1} {...labelStyles}>
+                            1
                         </SliderMark>
                         <SliderMark value={25000} {...labelStyles}>
                             25000
@@ -619,13 +619,13 @@ function PetitionForm(props){
                 <Text fontSize="20px" fontWeight="700">How much support do you need?</Text>
                 <Box p={"4vh 0vh"} m={"vh 0vh"}>
                 <Slider aria-label='slider-ex-4' defaultValue={sliderValue}
-                    min={100} max={100000}
+                    min={1} max={100000} step={100}
                     onChange={(v) => setSliderValue(v)}
                     onMouseEnter={() => setShowTooltip(true)}
                     onMouseLeave={() => setShowTooltip(false)}
                 >
-                    <SliderMark value={0} {...labelStyles}>
-                        0
+                    <SliderMark value={1} {...labelStyles}>
+                        1
                     </SliderMark>
                     <SliderMark value={25000} {...labelStyles}>
                         25000
@@ -735,13 +735,13 @@ function PetitionForm(props){
             <Text fontSize="20px" fontWeight="700">How much support do you need?</Text>
             <Box p={"4vh 0vh"} m={"vh 0vh"}>
             <Slider aria-label='slider-ex-4' defaultValue={sliderValue}
-                min={100} max={100000}
+                min={1} max={100000} step={100}
                 onChange={(v) => setSliderValue(v)}
                 onMouseEnter={() => setShowTooltip(true)}
                 onMouseLeave={() => setShowTooltip(false)}
             >
-                <SliderMark value={0} {...labelStyles}>
-                    0
+                <SliderMark value={1} {...labelStyles}>
+                    1
                 </SliderMark>
                 <SliderMark value={25000} {...labelStyles}>
                     25000

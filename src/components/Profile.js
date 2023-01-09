@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Card, CardHeader, CardBody, CardFooter, Heading, Text, Button, Center, Avatar, Spacer, HStack } from '@chakra-ui/react';
+import { Card, CardHeader, CardBody, CardFooter, Heading, Text, Button, Center, Avatar, Spacer, HStack, VStack } from '@chakra-ui/react';
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import { BellIcon, SettingsIcon } from '@chakra-ui/icons';
 import { useStateValue } from '../StateProvider';
@@ -26,22 +26,28 @@ const Profile = (props) => {
         {
             (profile) ?
             <>
-                <Card align='center'>
-                <CardBody>
+            <Center>
+                <Card align='center' h={"50%"} w={"50%"} mt={'8vh'}>
+                <CardBody >
+                    <VStack justifyContent={'space-between'}>
                     <Center>
-                    <Avatar boxSize={20}></Avatar>
+                    <Avatar boxSize={20} src={profile.image}></Avatar>
                     </Center>
+
                     <Center>
                         <Heading size='md'> {profile.profile}</Heading>
                     </Center>
+                    <Spacer/>
                     <Center>
                         <Text size='md'> {profile.bio}</Text>
                     </Center>
+                    </VStack>
                     
                 </CardBody>
                 <CardFooter>
                 </CardFooter>
             </Card>
+            </Center>
             {/* <Center>
             <Tabs mt={"2vh"} w={"100%"} variant='soft-rounded' colorScheme={'purple'}>
                 <TabList>

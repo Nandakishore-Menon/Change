@@ -1,27 +1,26 @@
+// Contract based on https://docs.openzeppelin.com/contracts/4.x/erc721
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.12;
+pragma solidity ^0.8.3;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-contract PetitionNFT is ERC721URIStorage, Ownable {
-   using Counters for Counters.Counter;
-   Counters.Counter private _tokenIds;
+contract FactoryNFT is ERC721URIStorage { 
 
-   constructor() ERC721("NFT", "ENFT") {}
+    using Counters for Counters.Counter; 
+    Counters.Counter private _tokenIds;
 
-   function mintNFT(address recipient, string memory tokenURI)
-       public onlyOwner
-       returns (uint256)
-   {
-       _tokenIds.increment();
+    constructor() ERC721("PetitionNFT", "PNFT") {
+    }
 
-       uint256 newItemId = _tokenIds.current();
-       _mint(recipient, newItemId);
-       _setTokenURI(newItemId, tokenURI);
+    function createToken(string memory tokenURI) public returns (uint) {
+        _tokenIds.increment();
+        uint256 newItemId = _tokenIds.current();
 
-       return newItemId;
-   }
+        _mint(msg.sender, newItemId);
+        _setTokenURI(newItemId, tokenURI);
+
+        return newItemId;
+    }
 }
