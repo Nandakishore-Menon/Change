@@ -1,11 +1,6 @@
 export const abi = 
 [
 	{
-		"inputs": [],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "string",
@@ -68,6 +63,94 @@ export const abi =
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_pid",
+				"type": "uint256"
+			}
+		],
+		"name": "setPetitionMinted",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "commentedBy",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "commentID",
+				"type": "uint256"
+			}
+		],
+		"name": "CommentAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "addedBy",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "petitionID",
+				"type": "uint256"
+			}
+		],
+		"name": "PetitionAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "upvotedBy",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "petitionID",
+				"type": "uint256"
+			}
+		],
+		"name": "PetitionUpvoted",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_petitionID",
+				"type": "uint256"
+			}
+		],
+		"name": "signPetition",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "getAllPetitions",
 		"outputs": [
@@ -97,6 +180,11 @@ export const abi =
 						"internalType": "uint256[]",
 						"name": "commentsID",
 						"type": "uint256[]"
+					},
+					{
+						"internalType": "bool",
+						"name": "nftMinted",
+						"type": "bool"
 					}
 				],
 				"internalType": "struct PetitionContract.Petition[]",
@@ -222,6 +310,11 @@ export const abi =
 						"internalType": "uint256[]",
 						"name": "commentsID",
 						"type": "uint256[]"
+					},
+					{
+						"internalType": "bool",
+						"name": "nftMinted",
+						"type": "bool"
 					}
 				],
 				"internalType": "struct PetitionContract.Petition",
@@ -268,6 +361,11 @@ export const abi =
 						"internalType": "uint256[]",
 						"name": "commentsID",
 						"type": "uint256[]"
+					},
+					{
+						"internalType": "bool",
+						"name": "nftMinted",
+						"type": "bool"
 					}
 				],
 				"internalType": "struct PetitionContract.Petition[]",
@@ -356,13 +454,19 @@ export const abi =
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "_petitionID",
+				"name": "_pid",
 				"type": "uint256"
 			}
 		],
-		"name": "signPetition",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"name": "isMinted",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{

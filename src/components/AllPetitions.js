@@ -8,7 +8,35 @@ import { abi } from "../contract/petition";
 function AllPetitions(props){
     const [state, dispatch] = useStateValue();
     const [petitions,setPetitions] = useState([]);
-    
+
+    if(state.contract!=null && state.contract != undefined)state.contract.events.PetitionAdded({fromBlock:0}).on(
+        'data',
+        (event) => {
+            console.log("Recieved Event in AllPetitions(PetitionAdded)",event);
+            const get_pet = async () => {
+                const petition_list = await state.contract.methods.getAllPetitions().call({from : state.account});
+                setPetitions(petition_list);
+
+            }
+
+            get_pet();
+        }
+    )
+
+    if(state.contract!=null && state.contract != undefined)state.contract.events.PetitionUpvoted({fromBlock:0}).on(
+        'data',
+        event => {
+            console.log("Recieved Event in AllPetitions(PetitionLiked)",event);
+            const get_pet = async () => {
+                const petition_list = await state.contract.methods.getAllPetitions().call({from : state.account});
+                setPetitions(petition_list);
+
+            }
+
+            get_pet();
+        }
+    )
+
     useEffect(()=>{
         
             const get_pet = async () => {

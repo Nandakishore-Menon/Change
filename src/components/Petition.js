@@ -92,6 +92,7 @@ function Petition(props){
                     <Image
                         // objectFit='cover'
                         fit='cover'
+                        w="100%"
                         maxW={{ base: '100%', sm: '26%' }}
                         src={metadata.image}
                         alt='Caffe Latte'

@@ -18,36 +18,59 @@ const Notifications = props => {
     const [petitions, setPetitions] = useState();
     const [notifs, setNotifs] = useState([]);
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const [metadata, setMetadata] = useState();
     useEffect(()=> {
         const get_pet = async () => {
             const petition_list = await state.contract.methods.getPetitionByUser(state.account).call({from : state.account});
+            console.log("petition_list",petition_list);
             setPetitions(petition_list);
-        }
-
-        const get_threshold_and_make_notifs = async () => {
             let tempNotif = [];
             for(let i=0;i<petitions.length;++i){
                 // petitions[i].petitionHash;
-                let metadata;
                 axios(petitions[i].petitionHash)
                 .then((response)=>{
                     // setMetadata(response.data);
-                    metadata = response.data;
+                    // metadata = response.data;
+                    setMetadata(response.data);
+                    console.log("response in notif ",response)
                 });
-                console.log("Metadata in notifs = ",metadata);
+                console.log("Metadata in notifs = ",await metadata);
                 const threshold = metadata.target_support;
-                console.log(threshold);
-                const petitionVotes = await state.contract.methods.getVotes(petitions[i].pid).call({from: state.account});
+                console.log("threshold in notif ",threshold);
+                const petitionVotes = await state.contract.methods.getVotes(petitions[i].petitionID).call({from: state.account});
                 console.log("petition votes in notif",petitionVotes);
-                if(petitionVotes>=threshold){
+                if(petitionVotes>=threshold-100){
                     const isMinted = await state.contract.methods.isMinted(petitions[i].pid).call({from: state.account});
                     if(!isMinted)tempNotif.push(`Minimum votes accquired, can mint NFT now for petition ${petitions[i].pid}!!`);
                 }
             }
             setNotifs(tempNotif);
         }
+
+        // const get_threshold_and_make_notifs = async () => {
+        //     let tempNotif = [];
+        //     for(let i=0;i<petitions.length;++i){
+        //         // petitions[i].petitionHash;
+        //         let metadata;
+        //         axios(petitions[i].petitionHash)
+        //         .then((response)=>{
+        //             // setMetadata(response.data);
+        //             metadata = response.data;
+        //         });
+        //         console.log("Metadata in notifs = ",await metadata);
+        //         // const threshold = metadata.target_support;
+        //         // console.log(threshold);
+        //         // const petitionVotes = await state.contract.methods.getVotes(petitions[i].pid).call({from: state.account});
+        //         // console.log("petition votes in notif",petitionVotes);
+        //         // if(petitionVotes>=threshold){
+        //         //     const isMinted = await state.contract.methods.isMinted(petitions[i].pid).call({from: state.account});
+        //         //     if(!isMinted)tempNotif.push(`Minimum votes accquired, can mint NFT now for petition ${petitions[i].pid}!!`);
+        //         // }
+        //     }
+        //     setNotifs(tempNotif);
+        // }
         get_pet();
-        console.log("Petitions set : ",petitions);
+        // console.log("Petitions set : ",petitions);
         // get_threshold_and_make_notifs();
         // get threshold from ipfs
         // call contract to see if threshold is crossed
@@ -56,9 +79,15 @@ const Notifications = props => {
     return (
         <>
             
-            <BellIcon boxSize={7} onClick={onOpen} color='black' _hover={{
-                                                                                color: "brand.heading",
-                                                                              }}/>
+            <BellIcon 
+                boxSize={7} 
+                onClick={onOpen} 
+                color='black' 
+                mr="10px"
+                _hover={{
+                    color: "brand.heading",
+                }}
+            />
             <Modal
             isCentered
             onClose={onClose}
