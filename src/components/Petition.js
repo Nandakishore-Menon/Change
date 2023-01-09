@@ -36,6 +36,7 @@ function Petition(props){
                     if(metadata!=null && metadata!=undefined){
                         if(props.pid == event.returnedValues.petitionID){
                             const newVotes = await state.contract.methods.getVotes(props.pid).call({from: state.account});
+                            console.log("New votes",newVotes);
                             setVotes(newVotes);
                         }
                     }
