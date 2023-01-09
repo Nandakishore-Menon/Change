@@ -1,6 +1,11 @@
 export const abi = 
 [
 	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "string",
@@ -14,6 +19,19 @@ export const abi =
 			}
 		],
 		"name": "addComment",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "addNFT",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -48,24 +66,6 @@ export const abi =
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_petitionID",
-				"type": "uint256"
-			}
-		],
-		"name": "signPetition",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
 	},
 	{
 		"inputs": [],
@@ -122,6 +122,11 @@ export const abi =
 						"internalType": "string",
 						"name": "userHash",
 						"type": "string"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "petitionNFTIDs",
+						"type": "uint256[]"
 					}
 				],
 				"internalType": "struct PetitionContract.User[]",
@@ -294,6 +299,11 @@ export const abi =
 						"internalType": "string",
 						"name": "userHash",
 						"type": "string"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "petitionNFTIDs",
+						"type": "uint256[]"
 					}
 				],
 				"internalType": "struct PetitionContract.User",
@@ -340,6 +350,19 @@ export const abi =
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_petitionID",
+				"type": "uint256"
+			}
+		],
+		"name": "signPetition",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{

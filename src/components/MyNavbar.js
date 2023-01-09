@@ -18,6 +18,7 @@ import unstop from '../assets/unstop.png';
 import {  useWeb3React } from '@web3-react/core'
 import Web3 from "web3";
 import { abi } from "../contract/petition";
+import { nft_abi } from "../contract/nft";
 import {CoinbaseWallet, Injected} from "../components/wallet/Connector"
 import { useStateValue } from '../StateProvider';
 import {
@@ -33,11 +34,14 @@ import {Link} from 'react-router-dom';
 import { background } from 'ui-box';
 import Logo from '../assets/Logo.png'
 import { Uauth } from '../components/wallet/Connector';
+import Notifications from './Notifications';
+import { Buffer } from 'buffer';
 
 function MyNavbar(props){
     const { active, account, library, connector, activate, deactivate } = useWeb3React();
     const [state, dispatch] = useStateValue();
     const [contract, setContract] = useState();
+    const [NFTContract, setNFTContract] = useState();
     const [web3, setWeb3] = useState();
     const [acc, setAcc] = useState();
     const [profileInfo,setProfileInfo] = useState();
@@ -93,6 +97,13 @@ function MyNavbar(props){
                 },
               });
             await dispatch({
+            type: "setNFTContract",
+            payload: {
+                
+                nft_contract: NFTContract,
+            },
+            });
+            await dispatch({
                 type: "setWeb3",
                 payload: {
                   web3: web3,
@@ -118,14 +129,45 @@ function MyNavbar(props){
             setLoading("Login with Coinbase");
             try {
                 await activate(CoinbaseWallet);
-                const temp_web3 = new Web3( CoinbaseWallet.provider);
+
+                const url = process.env.REACT_APP_NODE_URL;
+                const username = process.env.REACT_APP_NODE_USERNAME;
+                const password = process.env.REACT_APP_NODE_PASSWORD;
+
+                // Create base64 string of project credentials
+                const string = `${username}:${password}`;
+                const base64String = Buffer.from(string).toString("base64");
+
+                // Options
+                const options = {
+                keepAlive: true,
+                withCredentials: true,
+                timeout: 20000, // ms
+                headers: [
+                    {
+                        name: 'Authorization',
+                        value: `Basic ${base64String}`
+                    },
+                ]
+                };
+
+                // Create web3 node provider using project credentials
+                const web3Provider = await new Web3.providers.HttpProvider(url, options);
+                console.log(await web3Provider);
+                // const temp_web3 = new Web3( CoinbaseWallet.provider);
+                const temp_web3 = await new Web3( web3Provider);
+                console.log(await temp_web3);
                 const cntrct = new temp_web3.eth.Contract(abi, process.env.REACT_APP_CONTRACT_ADDRESS);
+                const nft_cntrct = new temp_web3.eth.Contract(nft_abi, process.env.REACT_APP_NFT_CONTRACT_ADDRESS);
                 
-                const tempAcc = await CoinbaseWallet.getAccount();
+                // const tempAcc = await CoinbaseWallet.getAccount();
+                const tempAcc = await temp_web3.eth.getAccounts();
                 console.log("temp ACC",tempAcc);
                 setWeb3(temp_web3);
                 setAcc(tempAcc);
                 setContract(cntrct);
+
+                setNFTContract(nft_cntrct);
                 userExist(cntrct,tempAcc);
                 
             } catch (ex) {
@@ -140,12 +182,17 @@ function MyNavbar(props){
                 // const tw3 = new Web3( (await Injected.getProvider()));//.providerMap.get("MetaMask"));
                 const tw3 = new Web3( (await Injected.getProvider()).providerMap.get("MetaMask"));
                 const cntrct = new tw3.eth.Contract(abi, process.env.REACT_APP_CONTRACT_ADDRESS);
+                const nft_cntrct = new tw3.eth.Contract(nft_abi, process.env.REACT_APP_NFT_CONTRACT_ADDRESS);
+
                 const tempAcc = await Injected.getAccount();
                 console.log("temp ACC",tempAcc);
                 
                 setWeb3(tw3);
                 setContract(cntrct);
+                setNFTContract(nft_cntrct);
+
                 setAcc(tempAcc);
+                
                 userExist(cntrct,tempAcc);
                 
                 
@@ -176,12 +223,16 @@ function MyNavbar(props){
                 console.log(accounts)
                 const tw3 = new Web3( await window.ethereum.providers[0]);
                 const cntrct = await (new tw3.eth.Contract(abi, process.env.REACT_APP_CONTRACT_ADDRESS));
+                const nft_cntrct = new tw3.eth.Contract(nft_abi, process.env.REACT_APP_NFT_CONTRACT_ADDRESS);
+
                 const tempAcc = await accounts[0];
                 console.log(tw3);
                 console.log(cntrct);
                 console.log(tempAcc);
                 await setWeb3(tw3);
                 await setContract(cntrct);
+                await setNFTContract(nft_cntrct);
+
                 await setAcc(accounts[0]);
                 console.log("acc", acc);
                 console.log("web3",web3);
@@ -319,11 +370,15 @@ function MyNavbar(props){
                 {
                     state.account ?
                     // access name somehow
+                    <>
+                    <Notifications/>
                     <Link to={`/profile`}>
                     <Button colorScheme='teal' variant='ghost' onClick={() => {}}>
                             <Avatar size='sm' ></Avatar>
                     </Button>
                     </Link>
+                    
+                    </>
                     :
                     <>
                         <Button

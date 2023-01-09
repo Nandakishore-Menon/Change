@@ -6,7 +6,8 @@ contract PetitionContract {
 
     struct User{
         address addr;
-        string userHash;// contains name and bio
+        string userHash;// contains name, image and bio
+        uint[] petitionNFTIDs;
     }
 
     struct Comment{
@@ -22,6 +23,7 @@ contract PetitionContract {
         string petitionHash;// contains petition title, content, timecreated, tags and image maybe
         // string petitionImageHash;
         uint[] commentsID;// comments
+        bool nftMinted;
     }
 
     constructor(){}
@@ -55,7 +57,9 @@ contract PetitionContract {
 
     // get user from address
     function getUser(address _addr) public view returns(User memory){
-        User memory retU=User(msg.sender,"nonexistent");
+        User memory retU;
+        // =User(msg.sender,"nonexistent");
+        retU.addr = msg.sender;
         for(uint _i=0; _i<users.length; ++_i){
             User storage u = users[_i];
             if(u.addr==_addr){
@@ -96,7 +100,10 @@ contract PetitionContract {
     // ADD A NEW USER
     function addUser(address _userAddr, string memory _userHash) public {
         if(userExists[_userAddr]==false){
-            User memory _u = User(_userAddr,_userHash);
+            User memory _u ;
+            // = User(_userAddr,_userHash);
+            _u.addr = _userAddr;
+            _u.userHash = _userHash;
             users.push(_u);
             userExists[_userAddr]=true;
         }
@@ -109,7 +116,7 @@ contract PetitionContract {
         uint _pid = petitions.length;
         // addUser(msg.sender);
         require(userExists[msg.sender],"user does not exist");
-        petitions.push(Petition(_pid,msg.sender,_signedUsersAddress,_petitionHash,_commentsID));
+        petitions.push(Petition(_pid,msg.sender,_signedUsersAddress,_petitionHash,_commentsID,false));
         petitionsPerUser[msg.sender]++;
     }
 
@@ -125,7 +132,6 @@ contract PetitionContract {
     function getVotes(uint _pid)public view returns(uint){
         return petitions[_pid].signedUsersAddress.length;
     }
-
     // check if user has voted
     function hasVoted(uint _pid) public view returns(bool){
         for(uint _i=0;_i<petitions[_pid].signedUsersAddress.length;++_i){
@@ -163,12 +169,24 @@ contract PetitionContract {
         }
     }
 
-    // get petition by tag 
-    // modify title of petition by an user 
-    // modify description of petition by an user 
-    // modify imageHash of a petition by an user 
-    // add a tag to a petition 
-    // get total number of users
-    // get user details by ID
-    // get id of a user by name
+    // add nft to user profile 
+    function addNFT(uint _id) public {
+        require(userExists[msg.sender]==true);
+        for(uint _i = 0;_i<users.length;++_i){
+            if(users[_i].addr == msg.sender){
+                users[_i].petitionNFTIDs.push(_id);
+                break;
+            }
+        }
+    }
+
+    // set that petition is minted
+    function setPetitionMinted(uint _pid) public {
+        petitions[_pid].nftMinted = true;
+    }
+
+    // check if nft is minted for that petition
+    function isMinted(uint _pid) public view returns(bool){
+        return petitions[_pid].nftMinted;
+    }
 }

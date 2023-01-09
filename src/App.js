@@ -32,6 +32,7 @@ function App(props) {
     var initialState = {
         web3: null,
         contract: null,
+        nft_contract: null,
         account: null,
         userExists:-1
     }
@@ -42,6 +43,11 @@ function App(props) {
                 return {
                 ...state,
                 contract: action.payload.contract,
+                };
+            case "setNFTContract":
+                return {
+                ...state,
+                nft_contract: action.payload.nft_contract,
                 };
             case "setWeb3":
                 return {

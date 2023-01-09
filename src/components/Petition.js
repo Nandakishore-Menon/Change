@@ -74,7 +74,7 @@ function Petition(props){
 
     return (
         <>
-            <SlideFade initialScale={0.9}  in={isOpen} >
+            <SlideFade in={isOpen} >
             {
                 (metadata)?
                 <Center>
