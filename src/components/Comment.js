@@ -7,6 +7,7 @@ import { Flex,Avatar,Box, Stack, StackDivider } from "@chakra-ui/react";
 function Comment(props){
     const [comment,setComment] = useState("");
     const [user, setUser] = useState("Initial User");
+
     useEffect(()=>{
         const getData = async () => {
             // get the data using ipfs

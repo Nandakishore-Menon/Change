@@ -56,12 +56,7 @@ const FullPetition = props => {
             }
         )
     
-        if(state.contract!=null && state.contract != undefined)state.contract.events.CommentAdded({fromBlock:0}).on(
-            'data',
-            async (event) => {
-                console.log("Revieved event of CommentAdded in FullPetition",event);
-            }
-        )
+        
     }
 
     useEffect(()=>{

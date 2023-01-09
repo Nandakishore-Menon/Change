@@ -7,6 +7,20 @@ function AllComments(props) {
     const [state, dispatch] = useStateValue();
     const [comments,setComments] = useState([]);
 
+    const somethingChanged = ()=> {
+        if(state.contract!=null && state.contract != undefined)state.contract.events.CommentAdded({fromBlock:0}).on(
+            'data',
+            async (event) => {
+                console.log("Revieved event of CommentAdded in FullPetition",event);
+                setComments([]);
+                const tempComments = await state.contract.methods.getCommentsByID(props.petitionID).call({from: state.account});
+
+                console.log("all comments", tempComments);
+                setComments(tempComments);
+            }
+        )
+    }
+
     useEffect(()=>{
         // console.log(props.dummy);
         const getComments = async () => {
@@ -15,6 +29,7 @@ function AllComments(props) {
             console.log("all comments", tempComments);
             setComments(tempComments);
         }
+        somethingChanged();
         getComments();
     }, [props.dummy]);
 
