@@ -14,8 +14,9 @@ function AllPetitions(props){
                 console.log("Recieved Event in AllPetitions(PetitionAdded)",event);
                 const get_pet = async () => {
                     const petition_list = await state.contract.methods.getAllPetitions().call({from : state.account});
+                    setPetitions([]);
                     setPetitions(petition_list);
-
+                    console.log("petitionAdded");
                 }
 
                 get_pet();
@@ -28,8 +29,9 @@ function AllPetitions(props){
                 console.log("Recieved Event in AllPetitions(PetitionLiked)",event);
                 const get_pet = async () => {
                     const petition_list = await state.contract.methods.getAllPetitions().call({from : state.account});
+                    setPetitions([]);
                     setPetitions(petition_list);
-
+                    console.log("likedddd");
                 }
 
                 get_pet();

@@ -45,10 +45,12 @@ const FullPetition = props => {
                     //       response.data.pipe(fs.createWriteStream('ada_lovelace.jpg'))
                     //     });
                     console.log("pet", pet);
+                    setVotes(0);
                     setVotes(pet.signedUsersAddress.length);
                 }
                 else {
                     const petition_count = await state.contract.methods.getVotes(pid).call({from: state.account});
+                    setVotes(0);
                     setVotes(petition_count);
                 }
             }
