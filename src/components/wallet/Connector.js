@@ -5,7 +5,7 @@ import UAuth from "@uauth/js"
 
 
 const CoinbaseWallet = new WalletLinkConnector({
-  url: `https://sparkling-necessary-feather.matic-testnet.discover.quiknode.pro/262dc78b6fd8cd788e6dd860e2aa30602272238b/`,
+  url: `${process.env.REACT_APP_POLYGON_RPC}`,
   appName: "Change",
   supportedChainIds: [80001],
  });
