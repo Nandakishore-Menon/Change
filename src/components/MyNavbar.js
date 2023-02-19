@@ -78,6 +78,8 @@ function MyNavbar(props){
         console.log("Account in USER EXIST",param_account);
         try {
             // var a = parseInt(param_account, 16);
+            console.log("param_account", param_account);
+            console.log("param_contract", param_contract);
             exists = await param_contract.methods.userExists(param_account).call({from:param_account});
         } catch (error) {
             console.log(error);            
@@ -108,7 +110,7 @@ function MyNavbar(props){
         // call uploadUserData
         setLoading("Uploading");
         if(state.userExists == 0){
-            const b64image = base64(image[0]);
+            const b64image = await base64(image[0]);
             const userInfoURL = await uploadUserData(acc,profileInfo,bioInfo, b64image);
             console.log(acc);
             await contract.methods.addUser(acc,userInfoURL).send({from:acc});
@@ -119,6 +121,13 @@ function MyNavbar(props){
                 payload: {
                     
                   contract: contract,
+                },
+              });
+              await dispatch({
+                type: "setDisconnect",
+                payload: {
+                    
+                  disconnect: deactivate,
                 },
               });
             await dispatch({
@@ -141,14 +150,16 @@ function MyNavbar(props){
                 },
               });
               const user = await contract.methods.getUser(acc).call({from:acc});
-                    // console.log(user);
+                    console.log("user", user);
                     await axios(user.userHash).then(
                         async (response) => {
+                            console.log("response", response)
                             setProfile(await response.data);
                             await dispatch({
                                 type: "setProfile",
                                 payload: {
                                     profile:response.data,
+                                    nftsOwned: user.petitionNFTIDs
                                 },
                             })
                             console.log('response', response.data.image)
@@ -210,7 +221,7 @@ function MyNavbar(props){
                 
                 // const tempAcc = await CoinbaseWallet.getAccount();
                 const tempAcc = await temp_web3.eth.getAccounts();
-                console.log("temp ACC",tempAcc);
+                console.log("temp ACC",tempAcc[0]);
                 setWeb3(temp_web3);
                 setAcc(tempAcc[0]);
                 setContract(cntrct);
@@ -233,15 +244,15 @@ function MyNavbar(props){
                 const nft_cntrct = new tw3.eth.Contract(nft_abi, process.env.REACT_APP_NFT_CONTRACT_ADDRESS);
 
                 const tempAcc = await Injected.getAccount();
-                console.log("temp ACC",tempAcc[0]);
+                console.log("temp ACC",tempAcc);
                 
                 setWeb3(tw3);
                 setContract(cntrct);
                 setNFTContract(nft_cntrct);
 
-                setAcc(tempAcc[0]);
+                setAcc(tempAcc);
                 
-                userExist(cntrct,tempAcc[0]);
+                userExist(cntrct,tempAcc);
                 
                 
             } catch (ex) {

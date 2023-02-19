@@ -17,7 +17,7 @@ const base64 = async (file) => {
       // Make a fileInfo Object
       console.log("Called", reader);
       baseURL = reader.result;
-      console.log(baseURL);
+      // console.log(baseURL);
       resolve(baseURL);
     };
     // console.log(fileInfo);
@@ -110,7 +110,7 @@ const uploadUserData = async (account, profileInfo,bio, dp) => {
     },
     data: [
       {
-        path: `nft/${profileInfo.replace(/ /g,'')}.png`,
+        path: `profiles/${profileInfo.replace(/ /g,'')}.png`,
         content: dp
       }
     ]
@@ -121,7 +121,7 @@ const uploadUserData = async (account, profileInfo,bio, dp) => {
   .request(img_options)
   .then(async (response) => {
     image_response =  response;
-    // console.log(response.data);
+    console.log("after posting", response.data);
   })
   .catch(function (error) {
     console.error(error);

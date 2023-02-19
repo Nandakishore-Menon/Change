@@ -21,9 +21,9 @@ export const abi =
 	{
 		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "_id",
-				"type": "uint256"
+				"internalType": "string",
+				"name": "_tokenURI",
+				"type": "string"
 			}
 		],
 		"name": "addNFT",
@@ -76,7 +76,26 @@ export const abi =
 		"type": "function"
 	},
 	{
-		"inputs": [],
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_petitionID",
+				"type": "uint256"
+			}
+		],
+		"name": "signPetition",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "nftContractAddress",
+				"type": "address"
+			}
+		],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
 	},
@@ -136,19 +155,6 @@ export const abi =
 		],
 		"name": "PetitionUpvoted",
 		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_petitionID",
-				"type": "uint256"
-			}
-		],
-		"name": "signPetition",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
 	},
 	{
 		"inputs": [],
@@ -464,6 +470,19 @@ export const abi =
 				"internalType": "bool",
 				"name": "",
 				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "nftContract",
+		"outputs": [
+			{
+				"internalType": "contract FactoryNFT",
+				"name": "",
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",

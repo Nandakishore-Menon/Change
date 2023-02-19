@@ -1,20 +1,7 @@
-import Navbar from "./components/Navbar";
-import {  useState } from "react";
-import { ChakraProvider } from '@chakra-ui/react'
-import Web3 from "web3";
-import {  useWeb3React } from '@web3-react/core'
-import {CoinbaseWallet, Injected} from "./components/wallet/Connector"
-import { StateProvider } from "./StateProvider";
-import { abi } from "./contract/petition";
-import Homepage from "./components/Homepage";
-import { Button, UserIcon } from "evergreen-ui";
-import Login from "./components/Login";
+import { ChakraProvider } from "@chakra-ui/react";
 import LandingPage from "./components/LandingPage";
-import MainPage from "./components/MainPage";
 import { Route, Routes } from "react-router-dom";
-import { Router } from "react-router-dom";
 import MyNavbar from "./components/MyNavbar";
-import AllPetitions from "./components/AllPetitions";
 import PetitionForm from "./components/PetitionForm";
 import MyPetitions from "./components/MyPetitions";
 import Profile from "./components/Profile";
@@ -22,76 +9,132 @@ import FullPetition from "./components/FullPetition";
 import theme from "./Theme";
 import "@fontsource/dm-sans";
 import "@fontsource/mulish";
-// import "@fontsource/josefin-sans";
 import "@fontsource/quicksand";
 import "@fontsource/poppins";
 import "@fontsource/inter";
+import {
+  LivepeerConfig,
+  createReactClient,
+  studioProvider,
+} from "@livepeer/react";
+import { StateProvider } from "./StateProvider";
+import { useEffect } from "react";
 
-function App(props) {
+function App() {
+  var initialState = {
+    web3: null,
+    contract: null,
+    nft_contract: null,
+    account: null,
+    userExists: -1,
+  };
+  // MoralisInit();
+  const livepeerClient = createReactClient({
+    provider: studioProvider({
+      apiKey: process.env.REACT_APP_LIVEPEER_API,
+    }),
+  });
 
-    var initialState = {
-        web3: null,
-        contract: null,
-        nft_contract: null,
-        account: null,
-        userExists:-1
-    }
+  
 
-    const reducer = (state, action) => {
-        switch (action.type) {
-            case "setContract":
-                return {
-                ...state,
-                contract: action.payload.contract,
-                };
-            case "setNFTContract":
-                return {
-                ...state,
-                nft_contract: action.payload.nft_contract,
-                };
-            case "setWeb3":
-                return {
-                    ...state,
-                    web3: action.payload.web3
-                };
-            case "setAccount":
-                return {
-                    ...state,
-                    account: action.payload.account
-                };
-            case "setUserExists":
-                return {
-                    ...state,
-                    userExists: action.payload.userExists
-                };
-            case "setProfile":
-                return {
-                    ...state,
-                    profile: action.payload.profile
-                }
-                console.log('dispatch profile', action.payload.profile)
-          default:
-            return state;
-        }
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case "setContract":
+        return {
+          ...state,
+          contract: action.payload.contract,
+        };
+      case "setNFTContract":
+        return {
+          ...state,
+          nft_contract: action.payload.nft_contract,
+        };
+      case "setWeb3":
+        return {
+          ...state,
+          web3: action.payload.web3,
+        };
+      case "setAccount":
+        return {
+          ...state,
+          account: action.payload.account,
+        };
+      case "setDisconnect":
+      return {
+        ...state,
+        disconnect: action.payload.disconnect,
       };
+      case "setUserExists":
+        return {
+          ...state,
+          userExists: action.payload.userExists,
+        };
+      case "setProfile":
+        return {
+          ...state,
+          profile: action.payload.profile,
+          nftsOwned: action.payload.nftsOwned
+        };
+      default:
+        return state;
+    }
+  };
 
-return (<>
-        <StateProvider initialState = {initialState} reducer = {reducer}>
-        <ChakraProvider theme={theme}>
+  return (
+    <>
+      <StateProvider initialState={initialState} reducer={reducer}>
+        <LivepeerConfig client={livepeerClient}>
+          <ChakraProvider theme={theme}>
             {/* <MainPage/> */}
             <MyNavbar />
-                <Routes>
-                    <Route path={`/`} element={<><LandingPage/></>} />
-                    <Route path={`/startPetition`} element={<><PetitionForm/></>}/>
-                    <Route path ={`/myPetitions`} element={<><MyPetitions/></>} />
-                    <Route path={`/:name`} element={<><Profile/></>} />
-                    <Route path={`/petitions/:pid`} element={<><FullPetition/></>} />
-                </Routes>
+            <Routes>
+              <Route
+                path={`/`}
+                element={
+                  <>
+                    <LandingPage />
+                  </>
+                }
+              />
+              <Route
+                path={`/startPetition`}
+                element={
+                  <>
+                    <PetitionForm />
+                  </>
+                }
+              />
+              <Route
+                path={`/myPetitions`}
+                element={
+                  <>
+                    <MyPetitions />
+                  </>
+                }
+              />
+              <Route
+                path={`/:name`}
+                element={
+                  <>
+                    <Profile />
+                  </>
+                }
+              />
+              <Route
+                path={`/petitions/:pid`}
+                element={
+                  <>
+                    <FullPetition />
+                  </>
+                }
+              />
+            </Routes>
             {/* <NewNavbar></NewNavbar> */}
-            
-        </ChakraProvider>
-        </StateProvider>
-    </>);
+          </ChakraProvider>
+        </LivepeerConfig>
+      </StateProvider>
+    </>
+  );
 }
 
 export default App;

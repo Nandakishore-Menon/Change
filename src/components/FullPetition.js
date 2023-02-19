@@ -93,7 +93,9 @@ const FullPetition = props => {
                 setVotes(pet.signedUsersAddress.length);
                 
 
-                if(pet.owner == state.account)setIsOwner(true);
+                if(pet.owner.toLowerCase() == state.account.toLowerCase())setIsOwner(true);
+                console.log("PET OWNER", pet.owner)
+                console.log("curr ACCOUNT", state.account)
                 if(pet.nftMinted)setIsClaimed(true);
 
             }
@@ -128,10 +130,11 @@ const FullPetition = props => {
         // make a file and push to ipfs
         const tokenURI = await uploadToken(petition.owner,petition.petitionHash,petition.petitionID);
         // use the tokenURI for minting NFT
-        const resMint = await state.nft_contract.methods.createNFT(tokenURI).send({from:state.account})
-        const tokenID = resMint;
-
-        const resAddNFT = await state.contract.methods.addNFT(tokenID).send({from:state.account});
+        console.log('tokenURI', tokenURI)
+        // const resMint = await state.nft_contract.methods.createToken(tokenURI[0].path).send({from:state.account})
+        // const tokenID = resMint;
+        
+        const resAddNFT = await state.contract.methods.addNFT(tokenURI[0].path).send({from:state.account});
         const res = await state.contract.methods.setPetitionMinted(pid).send({from:state.account});
         setIsClaimed(true);
         setMintLoading(false);
@@ -243,6 +246,9 @@ const FullPetition = props => {
                                 Support
                             </Button>
                             <>
+                                {console.log("target support", metadata.target_support)}
+                                {console.log("votes", votes)}
+                                {console.log("isOwner", isOwner)}
                                 {
                                     votes>=metadata.target_support && isOwner? 
                                     <>
